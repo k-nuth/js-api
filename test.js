@@ -9,15 +9,15 @@
 // node test.js
 
 
-const bitprim = require('./bitprim.js');
+const kth = require('./kth.js');
 const express = require('express')
 const app = express()
 const port = 8080
 
 process.stdin.resume();//so the program will not close instantly
 
-// const exec = bitprim.open("/home/fernando/exec/btc-mainnet.cfg")
-const exec = bitprim.openWithStd("/home/fernando/exec/btc-mainnet.cfg")
+// const exec = kth.open("/home/fernando/exec/btc-mainnet.cfg")
+const exec = kth.openWithStd("/home/fernando/exec/btc-mainnet.cfg")
 
 var res = exec.initchain()
 // console.log(`res: ${res}`)

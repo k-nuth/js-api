@@ -1,9 +1,9 @@
 // test_native.js
 
-const bitprim = require('./build/Release/bitprim');
+const kth = require('./build/Release/kth');
 
-const executor = bitprim.construct("hola", process.stdin, process.stdout, process.stderr);
-// bitprim.initchain(executor);
-bitprim.run(executor);
-bitprim.destruct(executor);
+const executor = kth.construct("hola", process.stdin, process.stdout, process.stderr);
+// kth.initchain(executor);
+kth.run(executor);
+kth.destruct(executor);
 
