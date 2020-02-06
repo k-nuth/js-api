@@ -1,15 +1,19 @@
+# Copyright (c) 2016-2020 Knuth Project developers.
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 {
   "targets": [
     {
-      "target_name": "bitprim",
-      "sources": [ "bitprim_addon.cc" ],
+      "target_name": "kth",
+      "sources": [ "kth_addon.cpp" ],
 
-      # "include_dirs": ["/home/fernando/dev/bitprim/bitprim-node-cint/include"],
-      # "libraries": [ "-lbitprim-node-cint", "-L/home/fernando/dev/bitprim/bitprim-node-cint/cmake-build-debug" ]
-      "include_dirs": ["C:\\development\\bitprim\\bitprim-node-cint\\include", "C:\\development\\bitprim\\bitprim-core\\include"],
-      # "libraries": [ "-LC:\\development\\bitprim\\bitprim-node-cint\\build", "-lbitprim-node-cint"  ]
+      # "include_dirs": ["/home/fernando/dev/k-nuth/c-api/include"],
+      # "libraries": [ "-lkth-c-api", "-L/home/fernando/dev/k-nuth/c-api/cmake-build-debug" ]
+      "include_dirs": ["C:\\development\\kth\\kth-c-api\\include", "C:\\development\\kth\\kth-core\\include"],
+      # "libraries": [ "-LC:\\development\\kth\\kth-c-api\\build", "-lkth-c-api"  ]
 
-      "libraries": [ "C:\\development\\bitprim\\bitprim-node-cint\\build\\bitprim-node-cint.lib"]
+      "libraries": [ "C:\\development\\kth\\kth-c-api\\build\\kth-c-api.lib"]
 
     }
   ]
