@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 // test.js
 
 // Windows: Se necesita Python 2.7 y MSVC
@@ -9,15 +13,15 @@
 // node test.js
 
 
-const bitprim = require('./bitprim.js');
+const kth = require('./kth.js');
 const express = require('express')
 const app = express()
 const port = 8080
 
 process.stdin.resume();//so the program will not close instantly
 
-// const exec = bitprim.open("/home/fernando/exec/btc-mainnet.cfg")
-const exec = bitprim.openWithStd("/home/fernando/exec/btc-mainnet.cfg")
+// const exec = kth.open("/home/fernando/exec/btc-mainnet.cfg")
+const exec = kth.openWithStd("/home/fernando/exec/btc-mainnet.cfg")
 
 var res = exec.initchain()
 // console.log(`res: ${res}`)

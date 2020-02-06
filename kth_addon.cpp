@@ -1,10 +1,14 @@
+// Copyright (c) 2016-2020 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <node.h>
 
-#include <bitprim/nodecint/executor_c.h>
+#include <kth/c-api/executor_c.h>
 
 #include <inttypes.h>   //TODO: Remove, it is for the printf (printing pointer addresses)
 
-namespace bitprim_ns {
+namespace kth_native {
 
 using v8::FunctionCallbackInfo;
 using v8::Isolate;
@@ -24,7 +28,7 @@ using v8::Function;
 //}
 
 
-void bitprim_executor_construct(FunctionCallbackInfo<Value> const& args) {
+void kth_executor_construct(FunctionCallbackInfo<Value> const& args) {
     Isolate* isolate = args.GetIsolate();
 
     if (args.Length() != 3) {
@@ -70,7 +74,7 @@ void bitprim_executor_construct(FunctionCallbackInfo<Value> const& args) {
 //    printf("serr_fd: %d\n", serr_fd);
 
     executor_t exec = executor_construct_fd(*path, sout_fd, serr_fd);
-//    printf("bitprim_executor_construct - exec: 0x%" PRIXPTR "\n", (uintptr_t)exec);
+//    printf("kth_executor_construct - exec: 0x%" PRIXPTR "\n", (uintptr_t)exec);
 
     Local<External> ext = External::New(isolate, exec);
 //    printf("xxxxx 4\n");
@@ -79,7 +83,7 @@ void bitprim_executor_construct(FunctionCallbackInfo<Value> const& args) {
 }
 
 
-void bitprim_executor_destruct(const FunctionCallbackInfo<Value>& args) {
+void kth_executor_destruct(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     // Check the number of arguments passed.
@@ -99,7 +103,7 @@ void bitprim_executor_destruct(const FunctionCallbackInfo<Value>& args) {
 }
 
 
-void bitprim_executor_stop(const FunctionCallbackInfo<Value>& args) {
+void kth_executor_stop(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     // Check the number of arguments passed.
@@ -119,7 +123,7 @@ void bitprim_executor_stop(const FunctionCallbackInfo<Value>& args) {
 }
 
 
-void bitprim_executor_initchain(const FunctionCallbackInfo<Value>& args) {
+void kth_executor_initchain(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     // Check the number of arguments passed.
@@ -141,7 +145,7 @@ void bitprim_executor_initchain(const FunctionCallbackInfo<Value>& args) {
     args.GetReturnValue().Set(num);
 }
 
-//void bitprim_executor_run(const FunctionCallbackInfo<Value>& args) {
+//void kth_executor_run(const FunctionCallbackInfo<Value>& args) {
 //    Isolate* isolate = args.GetIsolate();
 //
 //    // Check the number of arguments passed.
@@ -163,7 +167,7 @@ void bitprim_executor_initchain(const FunctionCallbackInfo<Value>& args) {
 //    args.GetReturnValue().Set(num);
 //}
 
-void bitprim_executor_run_wait(const FunctionCallbackInfo<Value>& args) {
+void kth_executor_run_wait(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     // Check the number of arguments passed.
@@ -188,7 +192,7 @@ void bitprim_executor_run_wait(const FunctionCallbackInfo<Value>& args) {
 
 // ---------------------------------------------
 
-void bitprim_get_last_height(const FunctionCallbackInfo<Value>& args) {
+void kth_get_last_height(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     // Check the number of arguments passed.
@@ -247,62 +251,62 @@ void validate_tx_callback(int error, char* message) {
     // printf("validate_tx_callback - 4\n");
 }
 
-void bitprim_validate_tx(FunctionCallbackInfo<Value> const& args) {
+void kth_validate_tx(FunctionCallbackInfo<Value> const& args) {
     Isolate* isolate = args.GetIsolate();
 
-    // printf("bitprim_validate_tx - 1\n");
+    // printf("kth_validate_tx - 1\n");
     if (args.Length() != 3) {
         isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
         return;
     }
 
-    // printf("bitprim_validate_tx - 2\n");
+    // printf("kth_validate_tx - 2\n");
 
     if ( ! args[0]->IsExternal()) {
         isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong arguments")));
         return;
     }
 
-    // printf("bitprim_validate_tx - 3\n");
+    // printf("kth_validate_tx - 3\n");
 
     if ( ! args[1]->IsString()) {
         isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong arguments")));
         return;
     }
 
-    // printf("bitprim_validate_tx - 4\n");
+    // printf("kth_validate_tx - 4\n");
 
     if ( ! args[2]->IsFunction()) {
         isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong arguments")));
         return;
     }
 
-    // printf("bitprim_validate_tx - 5\n");
+    // printf("kth_validate_tx - 5\n");
 
     void* vptr = v8::External::Cast(*args[0])->Value();
     executor_t exec = (executor_t)vptr;
 
-    // printf("bitprim_validate_tx - 6\n");
+    // printf("kth_validate_tx - 6\n");
 
 
     v8::String::Utf8Value tx_hex(args[1]->ToString());
 
-    // printf("bitprim_validate_tx - 7\n");
+    // printf("kth_validate_tx - 7\n");
 
 
     callback.Reset(isolate, args[2].As<Function>());
 
-    // printf("bitprim_validate_tx - 8\n");
+    // printf("kth_validate_tx - 8\n");
 
     auto tx = hex_to_tx(*tx_hex);
 
-    // printf("bitprim_validate_tx - 9\n");
+    // printf("kth_validate_tx - 9\n");
 
     // printf("tx: %p\n", tx);
 
     validate_tx(exec, tx, validate_tx_callback);
 
-    // printf("bitprim_validate_tx - 10\n");
+    // printf("kth_validate_tx - 10\n");
 
     //TODO: free tx
 }
@@ -347,16 +351,16 @@ void bitprim_validate_tx(FunctionCallbackInfo<Value> const& args) {
 
 
 void init(Local<Object> exports) {
-    NODE_SET_METHOD(exports, "construct", bitprim_executor_construct);
-    NODE_SET_METHOD(exports, "destruct", bitprim_executor_destruct);
-    NODE_SET_METHOD(exports, "stop", bitprim_executor_stop);
-    NODE_SET_METHOD(exports, "initchain", bitprim_executor_initchain);
-//    NODE_SET_METHOD(exports, "run", bitprim_executor_run);
-    NODE_SET_METHOD(exports, "run_wait", bitprim_executor_run_wait);
-    NODE_SET_METHOD(exports, "validate_tx", bitprim_validate_tx);
-    NODE_SET_METHOD(exports, "get_last_height", bitprim_get_last_height);
+    NODE_SET_METHOD(exports, "construct", kth_executor_construct);
+    NODE_SET_METHOD(exports, "destruct", kth_executor_destruct);
+    NODE_SET_METHOD(exports, "stop", kth_executor_stop);
+    NODE_SET_METHOD(exports, "initchain", kth_executor_initchain);
+//    NODE_SET_METHOD(exports, "run", kth_executor_run);
+    NODE_SET_METHOD(exports, "run_wait", kth_executor_run_wait);
+    NODE_SET_METHOD(exports, "validate_tx", kth_validate_tx);
+    NODE_SET_METHOD(exports, "get_last_height", kth_get_last_height);
 }
 
-NODE_MODULE(bitprim, init)
+NODE_MODULE(kth, init)
 
-}  // namespace bitprim_ns
+}  // namespace kth_native
