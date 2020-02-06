@@ -6,7 +6,7 @@
   "targets": [
     {
       "target_name": "kth",
-      "sources": [ "kth_addon.cc" ],
+      "sources": [ "kth_addon.cpp" ],
 
       # "include_dirs": ["/home/fernando/dev/k-nuth/c-api/include"],
       # "libraries": [ "-lkth-c-api", "-L/home/fernando/dev/k-nuth/c-api/cmake-build-debug" ]
