@@ -7,6 +7,7 @@
 
 const kth = require('kth-bch-native')
 const memoize = require("memoizee");
+const header = require('./header');
 
 class Block {
     constructor(header, transactions) {
@@ -15,7 +16,9 @@ class Block {
     }
 
     toNative() {
-        const native = kth.chain_block_construct(this.header, this.transactions);
+        const native = kth.chain_block_construct(
+            this.header.toNative(), 
+            this.transactions);
         return native;
     }
 
@@ -24,15 +27,15 @@ class Block {
         return res;
     }
 
-    rawData(version) {
-        const res = memoizedToData(this, version)
+    rawData(wire) {
+        const res = memoizedToData(this, wire)
         return res;
     }
 }
 
 const fromNative = function(native, destroy = false) {
     const obj = new Block(
-          kth.chain_block_header(native)
+          header.fromNative(kth.chain_block_header(native))
         , kth.chain_block_transactions(native)
     );
     if (destroy) {
@@ -48,9 +51,9 @@ const fromData = function(version, data) {
     return obj;
 }
 
-const toData = function(obj, version) {
+const toData = function(obj, wire) {
     const native = obj.toNative();
-    const res = kth.chain_block_to_data(native, version)
+    const res = kth.chain_block_to_data(native, wire)
     destruct(native);
     return res;
 }
