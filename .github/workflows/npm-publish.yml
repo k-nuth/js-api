@@ -45,8 +45,9 @@ jobs:
         with:
           node-version: ${{ matrix.config.nodejs_version }}
       - run: npm install
-      - run: npm ci
       - run: git status
+      - run: git diff
+      - run: npm ci
       - run: npm test
 
   # publish-npm:
