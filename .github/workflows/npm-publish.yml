@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.config.nodejs_version }}
-      - run: npm intall
+      - run: npm install
       - run: npm ci
       - run: git status
       - run: npm test
