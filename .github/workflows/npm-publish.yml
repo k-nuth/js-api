@@ -31,10 +31,14 @@ jobs:
         run: |
           echo "${MATRIX}"
           echo "::set-output name=matrix::${MATRIX}"
-          
-  build:
+
+  builds:
     needs: generate-matrix
     runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
+    name: ${{ matrix.config.name }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -44,7 +48,7 @@ jobs:
       - run: npm test
 
   # publish-npm:
-  #   needs: build
+  #   needs: builds
   #   runs-on: ${{ matrix.config.os }}
   #   steps:
   #     - uses: actions/checkout@v2
@@ -58,7 +62,7 @@ jobs:
   #         NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   # publish-gpr:
-  #   needs: build
+  #   needs: builds
   #   runs-on: ${{ matrix.config.os }}
   #   steps:
   #     - uses: actions/checkout@v2
