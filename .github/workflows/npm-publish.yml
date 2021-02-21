@@ -74,20 +74,28 @@ jobs:
   publish-npm:
     needs: [generate-versions]
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
+    # strategy:
+    #   fail-fast: false
+    #   versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
     name: Public NPM ${{ versions.config.nodejs_version }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ versions.config.nodejs_version }}
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+      - name: xxxxx
+        run: |
+          echo ${{fromJson(needs)}}
+          echo ${{fromJson(needs.generate-versions)}}
+          echo ${{fromJson(needs.generate-versions.outputs)}}
+          echo ${{fromJson(needs.generate-versions.outputs.versions)}}
+        shell: bash
+
+      # - uses: actions/checkout@v2
+      # - uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ versions.config.nodejs_version }}
+      #     registry-url: https://registry.npmjs.org/
+      # - run: npm ci
+      # - run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   # publish-gpr:
   #   needs: builds
