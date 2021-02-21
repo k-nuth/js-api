@@ -4,7 +4,7 @@
   "description": "Bitcoin Cash development platform for Javascript applications",
   "main": "src/index.js",
   "scripts": {
-    "test": "test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,10 @@
   "homepage": "https://github.com/k-nuth/js-api#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "kth-bch-native": "^0.9.10",
+    "kth-bch-native": "^0.9.13",
     "memoizee": "^0.4.14"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
   }
 }
