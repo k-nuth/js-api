@@ -40,7 +40,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     outputs:
-      versions: ${{ steps.set-versions.outputs.versions }}
+      matrix: ${{ steps.set-versions.outputs.matrix }}
     steps:
       - name: Generate NodeJS Versions Matrix
         id: set-versions
@@ -51,7 +51,7 @@ jobs:
                                ]}'
         run: |
           echo "${VERSIONS}"
-          echo "::set-output name=versions::${VERSIONS}"
+          echo "::set-output name=matrix::${VERSIONS}"
 
   builds:
     needs: generate-matrix
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
+      versions: ${{fromJson(needs.generate-versions.outputs.matrix)}}
     # name: Public NPM ${{ versions.config.nodejs_version }}
     name: Public NPM 
     steps:
@@ -89,7 +89,7 @@ jobs:
       # - run: echo ${{fromJson(needs)}}
       # - run: echo ${{fromJson(needs.generate-versions)}}
       # - run: echo ${{fromJson(needs.generate-versions.outputs)}}
-      - run: echo ${{fromJson(needs.generate-versions.outputs.versions)}}
+      - run: echo ${{fromJson(needs.generate-versions.outputs.matrix)}}
         
 
       # - uses: actions/checkout@v2
