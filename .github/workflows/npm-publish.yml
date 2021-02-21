@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
-    name: Build and Test ${{ matrix.config.name }}
+    name: ${{ matrix.config.name }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -83,20 +83,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: ${{ matrix.config.nodejs_version }}
           registry-url: https://registry.npmjs.org/
-      - run: echo ${{ matrix.config.nodejs_version }}
-        
-
-      # - uses: actions/checkout@v2
-      # - uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ${{ versions.config.nodejs_version }}
-      #     registry-url: https://registry.npmjs.org/
-      # - run: npm ci
-      # - run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   # publish-gpr:
   #   needs: builds
