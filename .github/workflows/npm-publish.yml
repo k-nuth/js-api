@@ -54,12 +54,12 @@ jobs:
       - run: npm test
 
   publish-npm:
-    if: ${{ matrix.config.os_kind == 'linux' }}
     needs: builds
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
+    if: ${{ matrix.config.os_kind == 'linux' }}
     name: Public NPM ${{ matrix.config.name }}
     steps:
       - uses: actions/checkout@v2
