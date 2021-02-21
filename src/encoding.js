@@ -4,7 +4,7 @@
 
 "use strict";
 
-function byteToHexString(uint8arr) {
+function bytesToHexStr(uint8arr) {
     if (!uint8arr) {
         return '';
     }
@@ -19,7 +19,7 @@ function byteToHexString(uint8arr) {
     return hexStr.toLowerCase();
 }
 
-function hexStringToByte(str) {
+function hexStrToBytes(str) {
     if (!str) {
         return new Uint8Array();
     }
@@ -36,19 +36,24 @@ function reverseStr(s){
     return s.split("").reverse().join("");
 }
 
+function fix(arr) {
+    return new Uint8Array(arr);
+}
+
 class Hash {
     static bytesToStr(arr) {
         const reversed = [...arr];
         reversed.reverse();
-        return byteToHexString(reversed);
+        return bytesToHexStr(reversed);
     }
 
     static strToBytes(s) {
-        return hexStringToByte(s).reverse();
+        return hexStrToBytes(s).reverse();
     }
 }
 
-exports.byteToHexString = byteToHexString;
-exports.hexStringToByte = hexStringToByte;
+exports.bytesToHexStr = bytesToHexStr;
+exports.hexStrToBytes = hexStrToBytes;
 exports.reverseStr = reverseStr;
+exports.fix = fix;
 exports.Hash = Hash;
