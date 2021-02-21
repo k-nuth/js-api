@@ -35,6 +35,24 @@ jobs:
           echo "${MATRIX}"
           echo "::set-output name=matrix::${MATRIX}"
 
+  generate-versions:
+    name: Generate NodeJS Versions Matrix
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.set-versions.outputs.versions }}
+    steps:
+      - name: Generate NodeJS Versions Matrix
+        id: set-versions
+        env:
+          VERSIONS: '{"config": ["nodejs_version": "15"},
+                               "nodejs_version": "14"},
+                               "nodejs_version": "12"},
+                               ]}'
+        run: |
+          echo "${VERSIONS}"
+          echo "::set-output name=versions::${VERSIONS}"
+
   builds:
     needs: generate-matrix
     runs-on: ${{ matrix.config.os }}
@@ -54,18 +72,17 @@ jobs:
       - run: npm test
 
   publish-npm:
-    needs: generate-matrix
+    needs: [generate-versions, builds]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
-    if: ${{ matrix.config.os_kind == 'linux' }}
-    name: Public NPM ${{ matrix.config.name }}
+      versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
+    name: Public NPM ${{ versions.config.nodejs_version }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.config.nodejs_version }}
+          node-version: ${{ versions.config.nodejs_version }}
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm publish
