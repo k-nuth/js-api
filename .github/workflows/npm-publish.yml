@@ -85,13 +85,11 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - name: xxxxx
-        shell: bash
-        run: |
-          echo ${{fromJson(needs)}}
-          echo ${{fromJson(needs.generate-versions)}}
-          echo ${{fromJson(needs.generate-versions.outputs)}}
-          echo ${{fromJson(needs.generate-versions.outputs.versions)}}
+      - run: echo ${{fromJson(needs)}}
+      - run: echo ${{fromJson(needs)}}
+      - run: echo ${{fromJson(needs.generate-versions)}}
+      - run: echo ${{fromJson(needs.generate-versions.outputs)}}
+      - run: echo ${{fromJson(needs.generate-versions.outputs.versions)}}
         
 
       # - uses: actions/checkout@v2
