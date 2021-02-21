@@ -21,10 +21,13 @@ jobs:
       - name: Generate Job Matrix
         id: set-matrix
         env:
-          MATRIX: '{"config": [{"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux"},
+          MATRIX: '{"config": [{"name": "Linux NodeJS 15","nodejs_version": "15","os": "ubuntu-20.04","os_kind": "linux"},
+                               {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux"},
                                {"name": "Linux NodeJS 12","nodejs_version": "12","os": "ubuntu-20.04","os_kind": "linux"},
+                               {"name": "macOS NodeJS 15","nodejs_version": "15","os": "macos-10.15","os_kind": "macos"},
                                {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-10.15","os_kind": "macos"},
                                {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-10.15","os_kind": "macos"},
+                               {"name": "Windows NodeJS 15","nodejs_version": "15","os": "windows-2019","os_kind": "windows"},
                                {"name": "Windows NodeJS 14","nodejs_version": "14","os": "windows-2019","os_kind": "windows"},
                                {"name": "Windows NodeJS 12","nodejs_version": "12","os": "windows-2019","os_kind": "windows"},
                                ]}'
@@ -38,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
-    name: ${{ matrix.config.name }}
+    name: Build and Test ${{ matrix.config.name }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -50,19 +53,24 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  # publish-npm:
-  #   needs: builds
-  #   runs-on: ${{ matrix.config.os }}
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: ${{ matrix.config.nodejs_version }}
-  #         registry-url: https://registry.npmjs.org/
-  #     - run: npm ci
-  #     - run: npm publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+  publish-npm:
+    if: ${{ matrix.config.os_kind == 'linux' }}
+    needs: builds
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
+    name: Public NPM ${{ matrix.config.name }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.config.nodejs_version }}
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   # publish-gpr:
   #   needs: builds
