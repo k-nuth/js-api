@@ -76,20 +76,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      versions: ${{fromJson(needs.generate-versions.outputs.matrix)}}
-    # name: Public NPM ${{ versions.config.nodejs_version }}
-    name: Public NPM 
+      matrix: ${{fromJson(needs.generate-versions.outputs.matrix)}}
+    name: Public NPM ${{ matrix.config.nodejs_version }}
+    # name: Public NPM 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      # - run: echo ${{fromJson(needs)}}
-      # - run: echo ${{fromJson(needs)}}
-      # - run: echo ${{fromJson(needs.generate-versions)}}
-      # - run: echo ${{fromJson(needs.generate-versions.outputs)}}
-      - run: echo ${{fromJson(needs.generate-versions.outputs.matrix)}}
+      - run: echo ${{ matrix.config.nodejs_version }}
         
 
       # - uses: actions/checkout@v2
