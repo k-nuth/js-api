@@ -54,7 +54,7 @@ jobs:
       - run: npm test
 
   publish-npm:
-    needs: [generate-matrix, builds]
+    needs: generate-matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
