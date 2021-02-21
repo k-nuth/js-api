@@ -80,6 +80,11 @@ jobs:
     # name: Public NPM ${{ versions.config.nodejs_version }}
     name: Public NPM 
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
       - name: xxxxx
         run: |
           echo ${{fromJson(needs)}}
