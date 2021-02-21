@@ -65,7 +65,7 @@ async function main() {
 //     return formattedTime
 // } 
 
-// function byteToHexString(uint8arr) {
+// function bytesToHexStr(uint8arr) {
 //     if (!uint8arr) {
 //         return '';
 //     }
@@ -80,7 +80,7 @@ async function main() {
 //     return hexStr.toUpperCase();
 // }
 
-// function hexStringToByte(str) {
+// function hexStrToBytes(str) {
 //     if (!str) {
 //         return new Uint8Array();
 //     }
@@ -98,16 +98,16 @@ async function main() {
 // }
 
 // function toHash(s) {
-//     return hexStringToByte(s).reverse();
+//     return hexStrToBytes(s).reverse();
 // }
 
 // function fromHash(arr) {
-//     return byteToHexString(arr.reverse());
+//     return bytesToHexStr(arr.reverse());
 // }
 
 
 // // var hash_arr0 = toHash('0000000091a5fdf4b5f5fe07ed869bf82049b3d61a403f2771b5cbd1937dad09')
-// // var hash_arr1 = hexStringToByte('0000000091a5fdf4b5f5fe07ed869bf82049b3d61a403f2771b5cbd1937dad09')
+// // var hash_arr1 = hexStrToBytes('0000000091a5fdf4b5f5fe07ed869bf82049b3d61a403f2771b5cbd1937dad09')
 // // var hash_arr2 = new Uint8Array([21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31, 21, 31])
 
 
