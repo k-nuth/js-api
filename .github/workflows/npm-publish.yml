@@ -74,9 +74,9 @@ jobs:
   publish-npm:
     needs: generate-versions
     runs-on: ubuntu-latest
-    # strategy:
-    #   fail-fast: false
-    #   versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
+    strategy:
+      fail-fast: false
+      versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
     # name: Public NPM ${{ versions.config.nodejs_version }}
     name: Public NPM 
     steps:
@@ -85,10 +85,10 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: echo ${{fromJson(needs)}}
-      - run: echo ${{fromJson(needs)}}
-      - run: echo ${{fromJson(needs.generate-versions)}}
-      - run: echo ${{fromJson(needs.generate-versions.outputs)}}
+      # - run: echo ${{fromJson(needs)}}
+      # - run: echo ${{fromJson(needs)}}
+      # - run: echo ${{fromJson(needs.generate-versions)}}
+      # - run: echo ${{fromJson(needs.generate-versions.outputs)}}
       - run: echo ${{fromJson(needs.generate-versions.outputs.versions)}}
         
 
