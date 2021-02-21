@@ -79,5 +79,6 @@ const destruct = function(native) {
 exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
+exports.hash = hash;
 exports.Header = Header;
 
