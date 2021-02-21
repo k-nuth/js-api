@@ -77,7 +77,8 @@ jobs:
     # strategy:
     #   fail-fast: false
     #   versions: ${{fromJson(needs.generate-versions.outputs.versions)}}
-    name: Public NPM ${{ versions.config.nodejs_version }}
+    # name: Public NPM ${{ versions.config.nodejs_version }}
+    name: Public NPM 
     steps:
       - name: xxxxx
         run: |
