@@ -57,7 +57,8 @@ jobs:
       - run: git status
       - run: git diff
       - run: npm ci
-      - run: npm test --runInBand
+      # - run: npm test --runInBand
+      - run: npm test
 
   publish-npm-12:
     needs: builds
