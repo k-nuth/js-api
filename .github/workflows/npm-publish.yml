@@ -47,6 +47,15 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.config.nodejs_version }}
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+      - run: python --version
+      - run: python3 --version
+      - run: where python
+      - run: where python3
+      - run: find . -name "python"
+      - run: find . -name "python3"
       - run: npm install --loglevel verbose
       - run: git status
       - run: git diff
