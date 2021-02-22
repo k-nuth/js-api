@@ -4,7 +4,7 @@
   "description": "Bitcoin Cash development platform for Javascript applications",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",
