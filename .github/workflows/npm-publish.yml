@@ -52,10 +52,10 @@ jobs:
           python-version: "3.8"
       - run: python --version
       - run: python3 --version
-      - run: which python
-      - run: which python3
-      - run: find . -name "python"
-      - run: find . -name "python3"
+      # - run: which python
+      # - run: which python3
+      # - run: find . -name "python"
+      # - run: find . -name "python3"
       - run: npm install --loglevel verbose
       - run: git status
       - run: git diff
