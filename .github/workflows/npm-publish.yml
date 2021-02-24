@@ -78,10 +78,10 @@ jobs:
       - run: npm test
         if: ${{ matrix.config.test == '1' }}
 
-  publish-npm-12:
+  publish-npm:
     needs: builds
     runs-on: ubuntu-latest
-    name: Public NPM 12
+    name: Public NPM
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -93,38 +93,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
-  publish-npm-14:
+  publish-gpr:
+    # needs: publish-npm
     needs: builds
-    runs-on: ubuntu-latest
-    name: Public NPM 14
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-
-  publish-npm-15:
-    needs: builds
-    runs-on: ubuntu-latest
-    name: Public NPM 15
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 15
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-
-  publish-gpr-12:
-    needs: publish-npm-12
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -132,37 +103,11 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
+      - run: npm login
       - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NODE_PRE_GYP_GITHUB_TOKEN}}
 
-  publish-gpr-14:
-    needs: publish-npm-14
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_PRE_GYP_GITHUB_TOKEN}}
-
-  publish-gpr-15:
-    needs: publish-npm-15
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 15
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_PRE_GYP_GITHUB_TOKEN}}
 
 
