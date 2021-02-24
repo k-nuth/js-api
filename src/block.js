@@ -8,7 +8,7 @@ const memoize = require('memoizee');
 class Block {
     constructor(header, transactions) {
         this.header = header;
-        this.transactions = transactions
+        this.transactions = transactions; 
     }
 
     toNative() {
