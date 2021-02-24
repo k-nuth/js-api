@@ -21,17 +21,20 @@ jobs:
       - name: Generate Job Matrix
         id: set-matrix
         env:
+          # MATRIX: '{"config": [{"name": "Linux NodeJS 15","nodejs_version": "15","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
+          #                      {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
+          #                      {"name": "Linux NodeJS 12","nodejs_version": "12","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
+          #                      {"name": "macOS NodeJS 15","nodejs_version": "15","os": "macos-10.15","os_kind": "macos","test": "0"},
+          #                      {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-10.15","os_kind": "macos","test": "0"},
+          #                      {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-10.15","os_kind": "macos","test": "0"},
+          #                      {"name": "Windows NodeJS 15","nodejs_version": "15","os": "windows-2019","os_kind": "windows","test": "1"},
+          #                      {"name": "Windows NodeJS 14","nodejs_version": "14","os": "windows-2019","os_kind": "windows","test": "1"},
+          #                      {"name": "Windows NodeJS 12","nodejs_version": "12","os": "windows-2019","os_kind": "windows","test": "1"},
+          #                      ]}'
           MATRIX: '{"config": [{"name": "Linux NodeJS 15","nodejs_version": "15","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
-                               {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
-                               {"name": "Linux NodeJS 12","nodejs_version": "12","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
-                               {"name": "macOS NodeJS 15","nodejs_version": "15","os": "macos-10.15","os_kind": "macos","test": "0"},
-                               {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-10.15","os_kind": "macos","test": "0"},
-                               {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-10.15","os_kind": "macos","test": "0"},
-                               {"name": "Windows NodeJS 15","nodejs_version": "15","os": "windows-2019","os_kind": "windows","test": "1"},
-                               {"name": "Windows NodeJS 14","nodejs_version": "14","os": "windows-2019","os_kind": "windows","test": "1"},
-                               {"name": "Windows NodeJS 12","nodejs_version": "12","os": "windows-2019","os_kind": "windows","test": "1"},
                                ]}'
-        run: |
+
+          run: |
           echo "${MATRIX}"
           echo "::set-output name=matrix::${MATRIX}"
 
@@ -104,7 +107,7 @@ jobs:
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
-      - run: npm login
+      # - run: npm login
       - run: npm ci
       - run: npm publish
         env:
