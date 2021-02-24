@@ -13,7 +13,7 @@
     }
   },
   "lint-staged": {
-    "./**/*.js": [
+    "**/*.js": [
       "eslint --fix"
     ]
   },
