@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm publish
@@ -97,11 +97,12 @@ jobs:
     # needs: publish-npm
     needs: builds
     runs-on: ubuntu-latest
+    name: Public GPR
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
           registry-url: https://npm.pkg.github.com/
       - run: npm login
       - run: npm ci
