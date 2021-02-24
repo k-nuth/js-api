@@ -26,7 +26,7 @@
   "homepage": "https://github.com/k-nuth/js-api#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "kth-bch-native": "^0.9.25",
+    "kth-bch-native": "^0.9.28",
     "memoizee": "^0.4.14"
   },
   "devDependencies": {
