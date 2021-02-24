@@ -16,7 +16,14 @@ class Header {
     }
 
     toNative() {
-        const native = kth.chain_header_construct(this.version, this.previousBlockHash, this.merkle, this.timestamp, this.bits, this.nonce);
+        const native = kth.chain_header_construct(
+            this.version,
+            this.previousBlockHash,
+            this.merkle,
+            this.timestamp,
+            this.bits,
+            this.nonce
+        );
         return native;
     }
 
@@ -38,7 +45,7 @@ const fromNative = (native, destroy = false) => {
         kth.chain_header_merkle(native),
         kth.chain_header_timestamp(native),
         kth.chain_header_bits(native),
-        kth.chain_header_nonce(native),
+        kth.chain_header_nonce(native)
     );
     if (destroy) {
         destruct(native);

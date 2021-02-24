@@ -32,7 +32,7 @@ const fromNative = (native, destroy = false) => {
     const obj = new Script(
         kth.chain_script_encoded(native),
         kth.chain_script_n(native),
-        kth.chain_script_prefix(native),
+        kth.chain_script_prefix(native)
     );
     if (destroy) {
         destruct(native);

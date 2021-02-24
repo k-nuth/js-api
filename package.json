@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js", 
+    "lint:fix": "npm run lint -- --fix"
   },
   "husky": {
     "hooks": {
