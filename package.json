@@ -7,6 +7,14 @@
     "test": "jest",
     "lint": "eslint **/*.js"
   },
+  "husky": { 
+    "hooks": { 
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": { 
+    "*.js": ["eslint --fix", "git add"]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/k-nuth/js-api.git"
@@ -34,6 +42,8 @@
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "jest": "^26.6.3"
+    "husky": "^5.1.1",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4"
   }
 }
