@@ -9,6 +9,13 @@ module.exports = {
         ecmaVersion: 12
     },
     rules: {
+        "prettier/prettier": [
+            "error",
+            {},
+            {
+              "usePrettierrc": true
+            }
+        ],
         'linebreak-style': 0,
         'no-console': 0,
         'no-use-before-define': 0,
