@@ -2,13 +2,11 @@ module.exports = {
     env: {
         commonjs: true,
         es2021: true,
-        jest: true,
+        jest: true
     },
-    extends: [
-        'airbnb-base',
-    ],
+    extends: ['airbnb-base', 'plugin:prettier/airbnb-base'],
     parserOptions: {
-        ecmaVersion: 12,
+        ecmaVersion: 12
     },
     rules: {
         'linebreak-style': 0,
@@ -18,6 +16,6 @@ module.exports = {
         'no-plusplus': 0,
         'max-len': 0,
         'max-classes-per-file': 0,
-        indent: ['error', 4],
-    },
+        indent: ['error', 4]
+    }
 };

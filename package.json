@@ -7,13 +7,15 @@
     "test": "jest",
     "lint": "eslint **/*.js"
   },
-  "husky": { 
-    "hooks": { 
+  "husky": {
+    "hooks": {
       "pre-commit": "lint-staged"
     }
   },
-  "lint-staged": { 
-    "*.js": ["eslint --fix", "git add"]
+  "lint-staged": {
+    "./**/*.js": [
+      "eslint --fix"
+    ]
   },
   "repository": {
     "type": "git",
@@ -41,9 +43,12 @@
   "devDependencies": {
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
     "husky": "^5.1.1",
     "jest": "^26.6.3",
-    "lint-staged": "^10.5.4"
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1"
   }
 }
