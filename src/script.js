@@ -6,66 +6,66 @@ const kth = require('kth-bch-native');
 const memoize = require('memoizee');
 
 class Script {
-  constructor(encoded, n, prefix) {
-    this.encoded = encoded;
-    this.n = n;
-    this.prefix = prefix;
-  }
+    constructor(encoded, n, prefix) {
+        this.encoded = encoded;
+        this.n = n;
+        this.prefix = prefix;
+    }
 
-  toNative() {
-    const native = kth.chain_script_construct(this.encoded, this.n, this.prefix);
-    return native;
-  }
+    toNative() {
+        const native = kth.chain_script_construct(this.encoded, this.n, this.prefix);
+        return native;
+    }
 
-  get hash() {
-    const res = memoizedHash(this);
-    return res;
-  }
+    get hash() {
+        const res = memoizedHash(this);
+        return res;
+    }
 
-  rawData(version) {
-    const res = memoizedToData(this, version);
-    return res;
-  }
+    rawData(version) {
+        const res = memoizedToData(this, version);
+        return res;
+    }
 }
 
 const fromNative = (native, destroy = false) => {
-  const obj = new Script(
-    kth.chain_script_encoded(native),
-    kth.chain_script_n(native),
-    kth.chain_script_prefix(native),
-  );
-  if (destroy) {
-    destruct(native);
-  }
-  return obj;
+    const obj = new Script(
+        kth.chain_script_encoded(native),
+        kth.chain_script_n(native),
+        kth.chain_script_prefix(native),
+    );
+    if (destroy) {
+        destruct(native);
+    }
+    return obj;
 };
 
 const fromData = (version, data) => {
-  const native = kth.chain_script_factory_from_data(version, data);
-  const obj = fromNative(native);
-  destruct(native);
-  return obj;
+    const native = kth.chain_script_factory_from_data(version, data);
+    const obj = fromNative(native);
+    destruct(native);
+    return obj;
 };
 
 const toData = (obj, version) => {
-  const native = obj.toNative();
-  const res = kth.chain_script_to_data(native, version);
-  destruct(native);
-  return res;
+    const native = obj.toNative();
+    const res = kth.chain_script_to_data(native, version);
+    destruct(native);
+    return res;
 };
 
 const hash = (obj) => {
-  const native = obj.toNative();
-  const res = kth.chain_script_hash(native);
-  destruct(native);
-  return res;
+    const native = obj.toNative();
+    const res = kth.chain_script_hash(native);
+    destruct(native);
+    return res;
 };
 
 const memoizedToData = memoize(toData);
 const memoizedHash = memoize(hash);
 
 const destruct = (native) => {
-  kth.chain_script_destruct(native);
+    kth.chain_script_destruct(native);
 };
 
 exports.fromNative = fromNative;

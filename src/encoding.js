@@ -3,51 +3,51 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 function bytesToHexStr(uint8arr) {
-  if (!uint8arr) {
-    return '';
-  }
+    if (!uint8arr) {
+        return '';
+    }
 
-  let hexStr = '';
-  for (let i = 0; i < uint8arr.length; i++) {
-    let hex = (uint8arr[i] & 0xff).toString(16);
-    hex = (hex.length === 1) ? `0${hex}` : hex;
-    hexStr += hex;
-  }
+    let hexStr = '';
+    for (let i = 0; i < uint8arr.length; i++) {
+        let hex = (uint8arr[i] & 0xff).toString(16);
+        hex = (hex.length === 1) ? `0${hex}` : hex;
+        hexStr += hex;
+    }
 
-  return hexStr.toLowerCase();
+    return hexStr.toLowerCase();
 }
 
 function hexStrToBytes(str) {
-  if (!str) {
-    return new Uint8Array();
-  }
+    if (!str) {
+        return new Uint8Array();
+    }
 
-  const a = [];
-  for (let i = 0, len = str.length; i < len; i += 2) {
-    a.push(parseInt(str.substr(i, 2), 16));
-  }
+    const a = [];
+    for (let i = 0, len = str.length; i < len; i += 2) {
+        a.push(parseInt(str.substr(i, 2), 16));
+    }
 
-  return new Uint8Array(a);
+    return new Uint8Array(a);
 }
 
 function reverseStr(s) {
-  return s.split('').reverse().join('');
+    return s.split('').reverse().join('');
 }
 
 function fix(arr) {
-  return new Uint8Array(arr);
+    return new Uint8Array(arr);
 }
 
 class Hash {
-  static bytesToStr(arr) {
-    const reversed = [...arr];
-    reversed.reverse();
-    return bytesToHexStr(reversed);
-  }
+    static bytesToStr(arr) {
+        const reversed = [...arr];
+        reversed.reverse();
+        return bytesToHexStr(reversed);
+    }
 
-  static strToBytes(s) {
-    return hexStrToBytes(s).reverse();
-  }
+    static strToBytes(s) {
+        return hexStrToBytes(s).reverse();
+    }
 }
 
 exports.bytesToHexStr = bytesToHexStr;
