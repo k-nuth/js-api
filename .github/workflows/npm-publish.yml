@@ -34,7 +34,7 @@ jobs:
           MATRIX: '{"config": [{"name": "Linux NodeJS 15","nodejs_version": "15","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
                                ]}'
 
-          run: |
+        run: |
           echo "${MATRIX}"
           echo "::set-output name=matrix::${MATRIX}"
 
