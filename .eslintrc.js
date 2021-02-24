@@ -4,16 +4,16 @@ module.exports = {
         es2021: true,
         jest: true
     },
-    extends: ['airbnb-base', 'plugin:prettier/airbnb-base'],
+    extends: ['eslint:recommended', 'plugin:prettier/recommended'],
     parserOptions: {
         ecmaVersion: 12
     },
     rules: {
-        "prettier/prettier": [
-            "error",
+        'prettier/prettier': [
+            'error',
             {},
             {
-              "usePrettierrc": true
+                usePrettierrc: true
             }
         ],
         'linebreak-style': 0,
