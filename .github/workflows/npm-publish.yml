@@ -90,30 +90,70 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm install
-      - run: npm test
-      # - run: npm ci
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_AUTH_TOKEN }}
-          registry: https://registry.npmjs.org/
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
-  publish-gpr:
-    needs: builds
-    runs-on: ubuntu-latest
-    name: Public GPR
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - run: npm install
-      # - run: npm test
-      # - run: npm ci
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          registry: https://npm.pkg.github.com/
+  # publish:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   # Setup .npmrc file to publish to npm
+  #   - uses: actions/setup-node@v2
+  #     with:
+  #       node-version: 14
+  #       registry-url: 'https://registry.npmjs.org'
+  #   - run: npm install
+  #   # Publish to npm
+  #   - run: npm publish --access public
+  #     env:
+  #       NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  #   # Setup .npmrc file to publish to GitHub Packages
+  #   - uses: actions/setup-node@v2
+  #     with:
+  #       registry-url: 'https://npm.pkg.github.com'
+  #       # Defaults to the user or organization that owns the workflow file
+  #       scope: '@octocat'
+  #   # Publish to GitHub Packages
+  #   - run: npm publish
+  #     env:
+  #       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # publish-npm:
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   name: Public NPM
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #     - run: npm install
+  #     - run: npm test
+  #     # - run: npm ci
+  #     - uses: JS-DevTools/npm-publish@v1
+  #       with:
+  #         token: ${{ secrets.NPM_AUTH_TOKEN }}
+  #         registry: https://registry.npmjs.org/
+
+  # publish-gpr:
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   name: Public GPR
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #     - run: npm install
+  #     # - run: npm test
+  #     # - run: npm ci
+  #     - uses: JS-DevTools/npm-publish@v1
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         registry: https://npm.pkg.github.com/
 
   # publish-npm:
   #   needs: builds
