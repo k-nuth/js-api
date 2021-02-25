@@ -90,9 +90,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      # - run: npm install
-      # - run: npm test
-      - run: npm ci
+      - run: npm install
+      - run: npm test
+      # - run: npm ci
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -107,9 +107,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      # - run: npm install
-      # - run: npm test
-      - run: npm ci
+      - run: npm install
+      - run: npm test
+      # - run: npm ci
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
