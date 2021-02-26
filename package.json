@@ -16,8 +16,7 @@
   "lint-staged": {
     "**/*.js": [
       "eslint --fix"
-    ],
-    "*.js": "eslint --cache --fix"
+    ]
   },
   "repository": {
     "type": "git",
