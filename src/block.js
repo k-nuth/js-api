@@ -1,12 +1,9 @@
-
 // Copyright (c) 2016-2020 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-"use strict";
-
-const kth = require('kth-bch-native')
-const memoize = require("memoizee");
+const kth = require('kth-bch-native');
+const memoize = require('memoizee');
 
 class Block {
     constructor(header, transactions) {
@@ -20,57 +17,53 @@ class Block {
     }
 
     get hash() {
-        const res = memoizedHash(this)
+        const res = memoizedHash(this);
         return res;
     }
 
     rawData(version) {
-        const res = memoizedToData(this, version)
+        const res = memoizedToData(this, version);
         return res;
     }
 }
 
-const fromNative = function(native, destroy = false) {
-    const obj = new Block(
-          kth.chain_block_header(native)
-        , kth.chain_block_transactions(native)
-    );
+const fromNative = (native, destroy = false) => {
+    const obj = new Block(kth.chain_block_header(native), kth.chain_block_transactions(native));
     if (destroy) {
-        destruct(native);    
+        destruct(native);
     }
     return obj;
-}
+};
 
-const fromData = function(version, data) {
-    const native = kth.chain_block_factory_from_data(version, data)
-    const obj = fromNative(native)
+const fromData = (version, data) => {
+    const native = kth.chain_block_factory_from_data(version, data);
+    const obj = fromNative(native);
     destruct(native);
     return obj;
-}
+};
 
-const toData = function(obj, version) {
+const toData = (obj, version) => {
     const native = obj.toNative();
-    const res = kth.chain_block_to_data(native, version)
+    const res = kth.chain_block_to_data(native, version);
     destruct(native);
     return res;
-}
+};
 
-const hash = function(obj) {
+const hash = (obj) => {
     const native = obj.toNative();
-    const res = kth.chain_block_hash(native)
+    const res = kth.chain_block_hash(native);
     destruct(native);
     return res;
-}
+};
 
-const memoizedToData = memoize(toData)
-const memoizedHash = memoize(hash)
+const memoizedToData = memoize(toData);
+const memoizedHash = memoize(hash);
 
-const destruct = function(native) {
+const destruct = (native) => {
     kth.chain_block_destruct(native);
-}
+};
 
 exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
 exports.Block = Block;
-
