@@ -21,15 +21,15 @@ jobs:
       - name: Generate Job Matrix
         id: set-matrix
         env:
-          MATRIX: '{"config": [{"name": "Linux NodeJS 15","nodejs_version": "15","os": "ubuntu-20.04","os_kind": "linux"},
-                               {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux"},
-                               {"name": "Linux NodeJS 12","nodejs_version": "12","os": "ubuntu-20.04","os_kind": "linux"},
-                               {"name": "macOS NodeJS 15","nodejs_version": "15","os": "macos-10.15","os_kind": "macos"},
-                               {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-10.15","os_kind": "macos"},
-                               {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-10.15","os_kind": "macos"},
-                               {"name": "Windows NodeJS 15","nodejs_version": "15","os": "windows-2019","os_kind": "windows"},
-                               {"name": "Windows NodeJS 14","nodejs_version": "14","os": "windows-2019","os_kind": "windows"},
-                               {"name": "Windows NodeJS 12","nodejs_version": "12","os": "windows-2019","os_kind": "windows"},
+          MATRIX: '{"config": [{"name": "Linux NodeJS 15","nodejs_version": "15","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
+                               {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
+                               {"name": "Linux NodeJS 12","nodejs_version": "12","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
+                               {"name": "macOS NodeJS 15","nodejs_version": "15","os": "macos-10.15","os_kind": "macos","test": "0"},
+                               {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-10.15","os_kind": "macos","test": "0"},
+                               {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-10.15","os_kind": "macos","test": "0"},
+                               {"name": "Windows NodeJS 15","nodejs_version": "15","os": "windows-2019","os_kind": "windows","test": "1"},
+                               {"name": "Windows NodeJS 14","nodejs_version": "14","os": "windows-2019","os_kind": "windows","test": "1"},
+                               {"name": "Windows NodeJS 12","nodejs_version": "12","os": "windows-2019","os_kind": "windows","test": "1"},
                                ]}'
         run: |
           echo "${MATRIX}"
@@ -44,37 +44,47 @@ jobs:
     name: ${{ matrix.config.name }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.config.nodejs_version }}
-      - run: npm install --loglevel verbose
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+
+      # - name: Settting EnvVars (Unix)
+      #   if: ${{ matrix.config.os_kind != 'windows' }}
+      #   shell: bash
+      #   run: |
+      #     echo "NODEJS_VERSION=${{ matrix.config.nodejs_version }}" >> $GITHUB_ENV
+      #     echo "KTH_GHA_MARCH_ID=${{ matrix.config.march_id }}" >> $GITHUB_ENV
+      #     echo "KTH_GHA_RUN_TESTS=${{ matrix.config.test }}" >> $GITHUB_ENV
+
+      # - name: Settting EnvVars (Windows)
+      #   if: ${{ matrix.config.os_kind == 'windows' }}
+      #   shell: powershell
+      #   run: |
+      #     echo "NODEJS_VERSION=${{ matrix.config.nodejs_version }}" >> $Env:GITHUB_ENV
+      #     echo "KTH_GHA_MARCH_ID=${{ matrix.config.march_id }}" >> $Env:GITHUB_ENV
+      #     echo "KTH_GHA_RUN_TESTS=${{ matrix.config.test }}" >> $Env:GITHUB_ENV
+
+      - run: python --version
+      - run: python3 --version
+      # - run: npm install --loglevel verbose
+      - run: npm install
       - run: git status
       - run: git diff
       - run: npm ci
+      # - run: npm test --runInBand
       - run: npm test
+        if: ${{ matrix.config.test == '1' }}
 
-  publish-npm-12:
+  publish-npm:
     needs: builds
     runs-on: ubuntu-latest
-    name: Public NPM 12
+    name: Public NPM
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-
-  publish-npm-14:
-    needs: builds
-    runs-on: ubuntu-latest
-    name: Public NPM 14
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
@@ -83,61 +93,97 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
-  publish-npm-15:
-    needs: builds
-    runs-on: ubuntu-latest
-    name: Public NPM 15
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 15
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+  # publish:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   # Setup .npmrc file to publish to npm
+  #   - uses: actions/setup-node@v2
+  #     with:
+  #       node-version: 14
+  #       registry-url: 'https://registry.npmjs.org'
+  #   - run: npm install
+  #   # Publish to npm
+  #   - run: npm publish --access public
+  #     env:
+  #       NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  #   # Setup .npmrc file to publish to GitHub Packages
+  #   - uses: actions/setup-node@v2
+  #     with:
+  #       registry-url: 'https://npm.pkg.github.com'
+  #       # Defaults to the user or organization that owns the workflow file
+  #       scope: '@octocat'
+  #   # Publish to GitHub Packages
+  #   - run: npm publish
+  #     env:
+  #       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-gpr-12:
-    needs: builds
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_PRE_GYP_GITHUB_TOKEN}}
+  # publish-npm:
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   name: Public NPM
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #     - run: npm install
+  #     - run: npm test
+  #     # - run: npm ci
+  #     - uses: JS-DevTools/npm-publish@v1
+  #       with:
+  #         token: ${{ secrets.NPM_AUTH_TOKEN }}
+  #         registry: https://registry.npmjs.org/
 
-  publish-gpr-14:
-    needs: builds
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_PRE_GYP_GITHUB_TOKEN}}
+  # publish-gpr:
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   name: Public GPR
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #     - run: npm install
+  #     # - run: npm test
+  #     # - run: npm ci
+  #     - uses: JS-DevTools/npm-publish@v1
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         registry: https://npm.pkg.github.com/
 
-  publish-gpr-15:
-    needs: builds
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 15
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_PRE_GYP_GITHUB_TOKEN}}
+  # publish-npm:
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   name: Public NPM
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #         registry-url: https://registry.npmjs.org/
+  #     - run: npm ci
+  #     - run: npm publish
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+
+  # publish-gpr:
+  #   # needs: publish-npm
+  #   needs: builds
+  #   runs-on: ubuntu-latest
+  #   name: Public GPR
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #         registry-url: https://npm.pkg.github.com/
+  #     # - run: npm login
+  #     # - run: npm ci
+  #     - run: npm ci
+  #     - run: npm publish
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
 
 
