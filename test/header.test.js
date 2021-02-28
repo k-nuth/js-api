@@ -1,4 +1,4 @@
-const header = require('../src/header');
+const header = require('../src/chain/header');
 const enc = require('../src/encoding');
 
 test('construct using fromData()', () => {
