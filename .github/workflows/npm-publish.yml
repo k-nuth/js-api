@@ -11,7 +11,18 @@ on: [push, pull_request]
 #     types: [created]
 
 jobs:
-  generate-matrix:
+  execute-linter:
+    name: Execute ESLint 
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v2
+    - name: Install modules 
+      run: npm install 
+    - name: Run ESLint
+      run: eslint **/*.js
+      
+  generate-matrix: execute-linter
+    needs: generate-matrix
     name: Generate Job Matrix
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
