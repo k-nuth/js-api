@@ -19,7 +19,7 @@ jobs:
     - name: Install modules 
       run: npm install 
     - name: Run ESLint
-      run: eslint **/*.js
+      run: npm run lint
       
   generate-matrix:
     needs: execute-linter
