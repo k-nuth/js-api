@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --runInBand",
     "lint": "eslint **/*.js",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix", 
+    "lint:gihub-action": "node ./node_modules/eslint/bin/eslint . --ignore-path .gitignore"
   },
   "husky": {
     "hooks": {
