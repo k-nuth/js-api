@@ -21,8 +21,8 @@ jobs:
     - name: Run ESLint
       run: eslint **/*.js
       
-  generate-matrix: execute-linter
-    needs: generate-matrix
+  generate-matrix:
+    needs: execute-linter
     name: Generate Job Matrix
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
