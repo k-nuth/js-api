@@ -25,27 +25,17 @@ test('construct using fromData()', () => {
 });
 
 test('construct using main constructor', () => {
-    const previousBlockHash = enc.Hash.strToBytes(
-        '0000000000000000000000000000000000000000000000000000000000000000'
-    );
-    const merkle = enc.Hash.strToBytes(
-        '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b'
-    );
+    const previousBlockHash = enc.Hash.strToBytes('0000000000000000000000000000000000000000000000000000000000000000');
+    const merkle = enc.Hash.strToBytes('4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b');
     const h = new header.Header(1, previousBlockHash, merkle, 1231006505, 0x1d00ffff, 2083236893);
 
-    expect(enc.Hash.bytesToStr(h.hash)).toBe(
-        '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
-    );
-    expect(enc.Hash.bytesToStr(h.hash)).toEqual(
-        '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
-    );
+    expect(enc.Hash.bytesToStr(h.hash)).toBe('000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f');
+    expect(enc.Hash.bytesToStr(h.hash)).toEqual('000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f');
     expect(h.version).toBe(1);
     expect(enc.Hash.bytesToStr(h.previousBlockHash)).toEqual(
         '0000000000000000000000000000000000000000000000000000000000000000'
     );
-    expect(enc.Hash.bytesToStr(h.merkle)).toEqual(
-        '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b'
-    );
+    expect(enc.Hash.bytesToStr(h.merkle)).toEqual('4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b');
     expect(h.timestamp).toBe(1231006505);
     expect(h.bits).toBe(0x1d00ffff);
     expect(h.nonce).toBe(2083236893);
