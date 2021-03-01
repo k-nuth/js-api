@@ -20,7 +20,7 @@ jobs:
     - name: Install modules 
       run: npm install 
     - name: Run ESLint
-      run: npm run lint:gihub-action
+      run: npm run lint:github-action
       
   generate-matrix:
     needs: execute-linter
