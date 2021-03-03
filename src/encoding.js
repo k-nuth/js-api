@@ -49,8 +49,12 @@ class Hash {
         return hexStrToBytes(s).reverse();
     }
 
-    static nullHash = Hash.strToBytes('0000000000000000000000000000000000000000000000000000000000000000');
-    // const nullHash = enc.Hash.strToBytes(nullHashStr);
+    // eslint --fix: Parsing error: Unexpected token =
+    // static nullHash = Hash.strToBytes('0000000000000000000000000000000000000000000000000000000000000000');
+
+    static nullHash() {
+        return Hash.strToBytes('0000000000000000000000000000000000000000000000000000000000000000');
+    }
 }
 
 exports.bytesToHexStr = bytesToHexStr;
