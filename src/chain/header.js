@@ -4,6 +4,7 @@
 
 const kth = require('kth-bch-native');
 const memoize = require('memoizee');
+const result = require('../result');
 
 class Header {
     constructor(version, previousBlockHash, merkle, timestamp, bits, nonce) {
@@ -55,9 +56,14 @@ const fromNative = (native, destroy = false) => {
 
 const fromData = (version, data) => {
     const native = kth.chain_header_factory_from_data(version, data);
+    const valid = kth.chain_header_is_valid(native);
+    if (!valid) {
+        destruct(native);
+        return new result.Result(undefined, false);
+    }
     const obj = fromNative(native);
     destruct(native);
-    return obj;
+    return new result.Result(obj, true);
 };
 
 const toData = (obj, version) => {
