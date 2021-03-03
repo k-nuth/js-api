@@ -1,6 +1,6 @@
 {
   "name": "kth-bch",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Bitcoin Cash development platform for Javascript applications",
   "main": "src/index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "knuth",
     "kth"
   ],
-  "author": "Fernando Pelliccioni <fpelliccioni@gmail.com> (http://kth.cash)",
+  "author": "Fernando Pelliccioni <fpelliccioni@gmail.com> (https://kth.cash)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/k-nuth/kth/issues"
@@ -38,7 +38,7 @@
   "homepage": "https://github.com/k-nuth/js-api#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "kth-bch-native": "^0.9.31",
+    "kth-bch-native": "^0.13.1",
     "memoizee": "^0.4.14"
   },
   "devDependencies": {
