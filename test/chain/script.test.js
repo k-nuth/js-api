@@ -1,5 +1,5 @@
-const script = require('../src/chain/script');
-const enc = require('../src/encoding');
+const script = require('../../src/chain/script');
+const enc = require('../../src/encoding');
 
 test('construct using fromData() prefix false', () => {
     const scriptStr =
