@@ -33,11 +33,12 @@ const fromNative = (native, prefix, destroy = false) => {
 const fromData = (encoded, prefix) => {
     const native = kth.chain_script_construct(encoded, prefix);
     const valid = kth.chain_script_is_valid(native);
-    const obj = fromNative(native, prefix);
-    destruct(native);
     if (!valid) {
+        destruct(native);
         return new result.Result(undefined, false);
     }
+    const obj = fromNative(native, prefix);
+    destruct(native);
     return new result.Result(obj, true);
 };
 
