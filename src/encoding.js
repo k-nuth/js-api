@@ -48,6 +48,9 @@ class Hash {
     static strToBytes(s) {
         return hexStrToBytes(s).reverse();
     }
+
+    static nullHash = Hash.strToBytes('0000000000000000000000000000000000000000000000000000000000000000');
+    // const nullHash = enc.Hash.strToBytes(nullHashStr);
 }
 
 exports.bytesToHexStr = bytesToHexStr;
