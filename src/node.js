@@ -8,6 +8,7 @@ const Promise = require('bluebird');
 const async_node = {
     // init_run_and_wait_for_signal: Promise.promisify(kth.node_init_run_and_wait_for_signal),
     init_run_and_wait_for_signal: (...args) => {
+        // return new Promise((resolve, reject) => {
         return new Promise((resolve) => {
             kth.node_init_run_and_wait_for_signal(...args, (err) => {
                 // if (err) return reject(err)
