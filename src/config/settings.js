@@ -8,4 +8,9 @@ const getDefault = (network) => {
     return kth.config_settings_default(network);
 };
 
+const getFromFile = (file) => {
+    return kth.config_settings_get_from_file(file);
+};
+
 exports.getDefault = getDefault;
+exports.getFromFile = getFromFile;
