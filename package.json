@@ -1,6 +1,6 @@
 {
   "name": "kth-bch",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Bitcoin Cash development platform for Javascript applications",
   "main": "src/index.js",
   "scripts": {
