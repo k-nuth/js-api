@@ -7,7 +7,7 @@ export declare function reverseStr(s: string): string;
 export declare function fix(arr: number[]): Uint8Array;
 
 export namespace Hash {
-  export function bytesToStr(arr: number[]): string;
+  export function bytesToStr(arr: Uint8Array): string;
   export function strToBytes(s: string): Uint8Array; 
   export function  nullHash(): Uint8Array; 
 }
