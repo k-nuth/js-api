@@ -1,14 +1,13 @@
-/* eslint-disable */
-
 // Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-const kth = require('kth-bch-native')
+const network = Object.freeze({
+    mainnet: 0,
+    testnet: 1,
+    regtest: 2,
+    testnet4: 3,
+    scalenet: 4
+});
 
-const common = {
-    toData: function(obj) {
-        const native = obj.toNative();
-        return obj;
-    }
-}
+exports.network = network;

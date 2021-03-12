@@ -1,4 +1,6 @@
-// Copyright (c) 2016-2020 Knuth Project developers.
+/* eslint-disable */
+
+// Copyright (c) 2016-2021 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -83,7 +85,7 @@ constructor.prototype.launch = function() {
 }
 
 // -------------------------------------------------------------
-function hexStringToByte(str) {
+function hexStrToBytes(str) {
     if (!str) {
         return new Uint8Array();
     }
@@ -101,7 +103,7 @@ function reverse(s){
 }
 
 function toHash(s) {
-    return hexStringToByte(s).reverse();
+    return hexStrToBytes(s).reverse();
 }
 
 function sleep(sleepDuration) {
@@ -127,7 +129,7 @@ async function wait_until_block(chain, desired_height) {
 }
 
 // --------------------------------------------------------------
-function byteToHexString(uint8arr) {
+function bytesToHexStr(uint8arr) {
     if (!uint8arr) {
         return '';
     }
@@ -145,8 +147,8 @@ function byteToHexString(uint8arr) {
 function fromHash(arr) {
     const reversed = [...arr];
     reversed.reverse();
-    return byteToHexString(reversed);
-    // return byteToHexString(arr.reverse());
+    return bytesToHexStr(reversed);
+    // return bytesToHexStr(arr.reverse());
 }
 
 // --------------------------------------------------------------
@@ -239,10 +241,10 @@ async function testGetBlockHeaderByHeight(chain) {
     testGetBlockHeaderObject(headerObj)
 
     const data = headerObj.rawData(0);
-    console.log(byteToHexString(data));
+    console.log(bytesToHexStr(data));
 
-    const data2 = hexStringToByte('000000206f02957eb726a4a50fc471cb15e25099f6af5a976044a5fae905580800000000f1bb8753254766f2ebea2657aa991782fdd2c99a43db0230b51058421373ba9b93a7445fa3c16e1c59c3b224')
-    console.log(byteToHexString(data2));
+    const data2 = hexStrToBytes('000000206f02957eb726a4a50fc471cb15e25099f6af5a976044a5fae905580800000000f1bb8753254766f2ebea2657aa991782fdd2c99a43db0230b51058421373ba9b93a7445fa3c16e1c59c3b224')
+    console.log(bytesToHexStr(data2));
     const headerObj2 = header.fromData(0, data2);
     testGetBlockHeaderObject(headerObj2)
 }
@@ -289,8 +291,8 @@ async function testGetBlockByHeight(chain) {
     const data = blockObj.rawData(true);
     console.log(byteToHexString(data));
 
-    const data2 = hexStringToByte('000000206f02957eb726a4a50fc471cb15e25099f6af5a976044a5fae905580800000000f1bb8753254766f2ebea2657aa991782fdd2c99a43db0230b51058421373ba9b93a7445fa3c16e1c59c3b224')
-    console.log(byteToHexString(data2));
+    const data2 = hexStrToBytes('000000206f02957eb726a4a50fc471cb15e25099f6af5a976044a5fae905580800000000f1bb8753254766f2ebea2657aa991782fdd2c99a43db0230b51058421373ba9b93a7445fa3c16e1c59c3b224')
+    console.log(bytesToHexStr(data2));
     const blockObj2 = block.fromData(0, data2);
     testGetBlockObject(blockObj2)
 }
