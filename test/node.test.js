@@ -27,7 +27,7 @@ const primitives = require('../src/primitives');
 
 
 test('...', async () => {
-    // expect(0).toBe(0);
+    expect(0).toBe(0);
     const setts = settings.getDefault(network.network.mainnet);
     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
 
@@ -35,10 +35,11 @@ test('...', async () => {
     
     const res = await n.launch(primitives.startModules.justChain);
     expect(res).toBe(0);
+    n.close();
 
-    setTimeout(function() {
-        n.close();
-    }, 1000);
+    // setTimeout(function() {
+    //     n.close();
+    // }, 5000);
 });
 
   
