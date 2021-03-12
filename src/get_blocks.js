@@ -8,21 +8,21 @@
 const kth = require('kth-bch-native')
 const memoize = require("memoizee");
 
-class Script {
-    constructor(encoded, prefix) {
-        this.encoded = encoded;
-        this.prefix = prefix;
+class GetBlocks {
+    constructor(start, stop) {
+        this.start = start;
+        this.stop = stop;
     }
 
     toNative() {
-        const native = kth.chain_script_construct(this.encoded, this.n, this.prefix);
+        const native = kth.chain_get_blocks_construct(this.start, this.stop);
         return native;
     }
 
-    // get hash() {
-    //     const res = memoizedHash(this)
-    //     return res;
-    // }
+    get hash() {
+        const res = memoizedHash(this)
+        return res;
+    }
 
     rawData(version) {
         const res = memoizedToData(this, version)
@@ -31,8 +31,10 @@ class Script {
 }
 
 const fromNative = function(native, destroy = false) {
-    let prefix = true;
-    const obj = new Script(kth.chain_script_to_data(native, prefix), prefix);
+    const obj = new GetBlocks(
+          kth.chain_get_blocks_start(native)
+        , kth.chain_get_blocks_stop(native)
+    );
     if (destroy) {
         destruct(native);    
     }
@@ -40,7 +42,7 @@ const fromNative = function(native, destroy = false) {
 }
 
 const fromData = function(version, data) {
-    const native = kth.chain_script_factory_from_data(version, data)
+    const native = kth.chain_get_blocks_factory_from_data(version, data)
     const obj = fromNative(native)
     destruct(native);
     return obj;
@@ -48,27 +50,27 @@ const fromData = function(version, data) {
 
 const toData = function(obj, version) {
     const native = obj.toNative();
-    const res = kth.chain_script_to_data(native, version)
+    const res = kth.chain_get_blocks_to_data(native, version)
     destruct(native);
     return res;
 }
 
-// const hash = function(obj) {
-//     const native = obj.toNative();
-//     const res = kth.chain_script_hash(native)
-//     destruct(native);
-//     return res;
-// }
+const hash = function(obj) {
+    const native = obj.toNative();
+    const res = kth.chain_get_blocks_hash(native)
+    destruct(native);
+    return res;
+}
 
 const memoizedToData = memoize(toData)
-// const memoizedHash = memoize(hash)
+const memoizedHash = memoize(hash)
 
 const destruct = function(native) {
-    kth.chain_script_destruct(native);
+    kth.chain_get_blocks_destruct(native);
 }
 
 exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
-exports.Script = Script;
+exports.GetBlocks = GetBlocks;
 

@@ -7,15 +7,19 @@
 
 const kth = require('kth-bch-native')
 const memoize = require("memoizee");
+const listCommon = require('./list_common');
+const outputPoint = require('./output_point');
+const script = require('./script');
 
-class Script {
-    constructor(encoded, prefix) {
-        this.encoded = encoded;
-        this.prefix = prefix;
+class Input {
+    constructor(previousOutput, script, sequence) {
+        this.previousOutput = previousOutput;
+        this.script = script;
+        this.sequence = sequence;
     }
 
     toNative() {
-        const native = kth.chain_script_construct(this.encoded, this.n, this.prefix);
+        const native = kth.chain_input_construct(this.previousOutput, this.script, this.sequence);
         return native;
     }
 
@@ -31,8 +35,9 @@ class Script {
 }
 
 const fromNative = function(native, destroy = false) {
-    let prefix = true;
-    const obj = new Script(kth.chain_script_to_data(native, prefix), prefix);
+    const prevOut = outputPoint.fromNative(kth.chain_input_previous_output(native));
+    const sct = script.fromNative(kth.chain_input_script(native));
+    const obj = new Input(prevOut, sct, kth.chain_input_sequence(native));
     if (destroy) {
         destruct(native);    
     }
@@ -40,7 +45,7 @@ const fromNative = function(native, destroy = false) {
 }
 
 const fromData = function(version, data) {
-    const native = kth.chain_script_factory_from_data(version, data)
+    const native = kth.chain_input_factory_from_data(version, data)
     const obj = fromNative(native)
     destruct(native);
     return obj;
@@ -48,14 +53,14 @@ const fromData = function(version, data) {
 
 const toData = function(obj, version) {
     const native = obj.toNative();
-    const res = kth.chain_script_to_data(native, version)
+    const res = kth.chain_input_to_data(native, version)
     destruct(native);
     return res;
 }
 
 // const hash = function(obj) {
 //     const native = obj.toNative();
-//     const res = kth.chain_script_hash(native)
+//     const res = kth.chain_input_hash(native)
 //     destruct(native);
 //     return res;
 // }
@@ -64,11 +69,11 @@ const memoizedToData = memoize(toData)
 // const memoizedHash = memoize(hash)
 
 const destruct = function(native) {
-    kth.chain_script_destruct(native);
+    kth.chain_input_destruct(native);
 }
 
 exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
-exports.Script = Script;
-
+exports.Input = Input;
+exports.list = listCommon.create(kth, exports, 'chain', 'input')

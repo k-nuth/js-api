@@ -7,15 +7,17 @@
 
 const kth = require('kth-bch-native')
 const memoize = require("memoizee");
+const listCommon = require('./list_common');
+const script = require('./script');
 
-class Script {
-    constructor(encoded, prefix) {
-        this.encoded = encoded;
-        this.prefix = prefix;
+class Output {
+    constructor(value, script) {
+        this.value = value;
+        this.script = script;
     }
 
     toNative() {
-        const native = kth.chain_script_construct(this.encoded, this.n, this.prefix);
+        const native = kth.chain_output_construct(this.value, this.script);
         return native;
     }
 
@@ -31,8 +33,8 @@ class Script {
 }
 
 const fromNative = function(native, destroy = false) {
-    let prefix = true;
-    const obj = new Script(kth.chain_script_to_data(native, prefix), prefix);
+    const sct = script.fromNative(kth.chain_output_script(native));
+    const obj = new Output(kth.chain_output_value(native), sct);
     if (destroy) {
         destruct(native);    
     }
@@ -40,7 +42,7 @@ const fromNative = function(native, destroy = false) {
 }
 
 const fromData = function(version, data) {
-    const native = kth.chain_script_factory_from_data(version, data)
+    const native = kth.chain_output_factory_from_data(version, data)
     const obj = fromNative(native)
     destruct(native);
     return obj;
@@ -48,14 +50,14 @@ const fromData = function(version, data) {
 
 const toData = function(obj, version) {
     const native = obj.toNative();
-    const res = kth.chain_script_to_data(native, version)
+    const res = kth.chain_output_to_data(native, version)
     destruct(native);
     return res;
 }
 
 // const hash = function(obj) {
 //     const native = obj.toNative();
-//     const res = kth.chain_script_hash(native)
+//     const res = kth.chain_output_hash(native)
 //     destruct(native);
 //     return res;
 // }
@@ -64,11 +66,11 @@ const memoizedToData = memoize(toData)
 // const memoizedHash = memoize(hash)
 
 const destruct = function(native) {
-    kth.chain_script_destruct(native);
+    kth.chain_output_destruct(native);
 }
 
 exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
-exports.Script = Script;
-
+exports.Output = Output;
+exports.list = listCommon.create(kth, exports, 'chain', 'output')

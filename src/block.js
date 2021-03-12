@@ -1,4 +1,3 @@
-
 // Copyright (c) 2016-2020 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -8,6 +7,8 @@
 const kth = require('kth-bch-native')
 const memoize = require("memoizee");
 const header = require('./header');
+const transaction = require('./transaction');
+const listCommon = require('./list_common');
 
 class Block {
     constructor(header, transactions) {
@@ -16,9 +17,13 @@ class Block {
     }
 
     toNative() {
-        const native = kth.chain_block_construct(
-            this.header.toNative(), 
-            this.transactions);
+        const headerNative = this.header.toNative();
+        const txsNative = transaction.list.toNative(this.transactions);
+        const native = kth.chain_block_construct(headerNative, txsNative);
+
+        header.destruct(headerNative);
+        transaction.list.destruct(txsNative);
+
         return native;
     }
 
@@ -34,10 +39,9 @@ class Block {
 }
 
 const fromNative = function(native, destroy = false) {
-    const obj = new Block(
-          header.fromNative(kth.chain_block_header(native))
-        , kth.chain_block_transactions(native)
-    );
+    const obj = new Block(header.fromNative(kth.chain_block_header(native)),
+        transaction.list.fromNative(kth.chain_block_transactions(native)));
+    
     if (destroy) {
         destruct(native);    
     }
@@ -76,4 +80,4 @@ exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
 exports.Block = Block;
-
+exports.list = listCommon.create(kth, exports, 'chain', 'block')
