@@ -16,14 +16,10 @@ export declare class Header {
 
 export declare function fromNative(native: any, destroy: boolean): Header; 
 
-export declare function fromData(version: number, data: Uint8Array): Result; 
+export declare function fromData(version: number, data: Uint8Array): Result<Header>; 
 
-export declare function toData(obj: any, version: number): Uint8Array; 
+export declare function toData(obj: Header, version: number): Uint8Array; 
 
-export declare function hash(obj: any): Uint8Array; 
+export declare function hash(obj: Header): Uint8Array; 
 
 export declare function destruct(native: any): void; 
-
-
-// TODO (Nicolás): Check with Fernando all 'any' types 
-

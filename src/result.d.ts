@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-export declare class Result { 
-  constructor(obj: any, ok: boolean); 
+export declare class Result<Type> { 
+  constructor(obj: Type, ok: boolean); 
 }
 
-// TODO (Nicolás): Check with Fernando all 'any' types 
+
