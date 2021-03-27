@@ -5,9 +5,9 @@
 export declare class Script { 
   constructor(enconded: Uint8Array); 
 
-  toNative(prefix: any): any; 
+  toNative(prefix: boolean): any; 
 
   rawData(): Uint8Array; 
 }
 
-export declare function fromNative(native: any, prefix: any, destroy: boolean): any; 
+export declare function fromNative(native: any, prefix: boolean, destroy: boolean): any; 
