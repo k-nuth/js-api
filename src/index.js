@@ -271,9 +271,9 @@ function testGetBlockObject(block) {
 
     testGetBlockHeaderObject(block.header)
 
-    console.log(`testGetBlockObject, rawData 1: ${block.rawData(0)}`)
-    console.log(`testGetBlockObject, rawData 2: ${block.rawData(0)}`)
-    console.log(`testGetBlockObject, rawData 3: ${block.rawData(0)}`)
+    console.log(`testGetBlockObject, rawData 1: ${block.rawData(true)}`)
+    console.log(`testGetBlockObject, rawData 2: ${block.rawData(true)}`)
+    console.log(`testGetBlockObject, rawData 3: ${block.rawData(true)}`)
             
     console.log(`testGetBlockObject, hash 1: ${fromHash(block.hash)}`)
     console.log(`testGetBlockObject, hash 2: ${fromHash(block.hash)}`)
@@ -288,8 +288,8 @@ async function testGetBlockByHeight(chain) {
     console.log(`getBlockByHeight is OK, height: ${height}`);
     testGetBlockObject(blockObj)
 
-    const data = blockObj.rawData(0);
-    console.log(bytesToHexStr(data));
+    const data = blockObj.rawData(true);
+    console.log(byteToHexString(data));
 
     const data2 = hexStrToBytes('000000206f02957eb726a4a50fc471cb15e25099f6af5a976044a5fae905580800000000f1bb8753254766f2ebea2657aa991782fdd2c99a43db0230b51058421373ba9b93a7445fa3c16e1c59c3b224')
     console.log(bytesToHexStr(data2));
@@ -322,13 +322,12 @@ async function main() {
 
     //-----------------------------------
 
-    await testGetBlockHeaderByHeight(chain);
+    // await testGetBlockHeaderByHeight(chain);
     
-    
-    // Testnet4 Genesis block
-    await testGetBlockHeaderByHash(chain, toHash('000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b'));
-    await testGetBlockHeaderByHash(chain, toHash('000000005845885b0f3e66a5a7377c408c7c42bad7528f44862f7b7e741bdb9e'));
-    await testGetBlockHeaderByHash(chain, hash_arr);
+    // // Testnet4 Genesis block
+    // await testGetBlockHeaderByHash(chain, toHash('000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b'));
+    // await testGetBlockHeaderByHash(chain, toHash('000000005845885b0f3e66a5a7377c408c7c42bad7528f44862f7b7e741bdb9e'));
+    // await testGetBlockHeaderByHash(chain, hash_arr);
 
 
     await testGetBlockByHeight(chain);
