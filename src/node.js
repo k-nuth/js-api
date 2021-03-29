@@ -4,6 +4,7 @@
 
 const kth = require('kth-bch-native');
 const Promise = require('bluebird');
+const chain = require('./chain/chain');
 
 const async_node = {
     // init_run_and_wait_for_signal: Promise.promisify(kth.node_init_run_and_wait_for_signal),
@@ -23,10 +24,10 @@ class Node {
         this.native = kth.node_construct(settings, stdoutEnabled);
     }
 
-    // get chain() {
-    //     const res = new Chain(kth.node_get_chain(this.native));
-    //     return res;
-    // }
+    get chain() {
+        const res = new chain.Chain(kth.node_get_chain(this.native));
+        return res;
+    }
 
     close() {
         kth.node_signal_stop(this.native);
