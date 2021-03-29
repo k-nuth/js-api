@@ -1,1 +1,4 @@
 node_modules/
+blockchain/
+debug.log
+error.log
