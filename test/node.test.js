@@ -227,12 +227,19 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    console.log("afterAll 1");
     await new Promise(resolve => setTimeout(resolve, 3000));
+    console.log("afterAll 2");
     node_.close();
+    console.log("afterAll 3");
 });
 
 test('retrieves the right chain height', async () => {
+    console.log("before test");
+    const h = await node_.chain.getLastHeight();
+    console.log("getLastHeight", h);
     expect(await node_.chain.getLastHeight()).toEqual(170);
+    console.log("after test");
 });
 
 // test('getBlockHeaderByHeight', async () => {
