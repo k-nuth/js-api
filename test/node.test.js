@@ -15,15 +15,15 @@ const primitives = require('../src/primitives');
 
 async function pushBlock(chain, hexStr) {
     const bytes = enc.hexStrToBytes(hexStr);
-    console.log("bytes", bytes);
+    // console.log("bytes", bytes);
     const result = block.fromData(1, bytes);
-    console.log("result", result);
+    // console.log("result", result);
 
     if ( ! result.ok) {
         throw "Invalid block";
     }
     const res = await chain.organizeBlock(result.obj);
-    console.log("res", res);
+    // console.log("res", res);
 }
 
 async function fillBlocks(chain) {
@@ -228,7 +228,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     console.log("afterAll 1");
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
     console.log("afterAll 2 1");
     console.log("afterAll 2 2");
     console.log("afterAll 2 3");
