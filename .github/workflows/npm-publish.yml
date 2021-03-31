@@ -87,7 +87,7 @@ jobs:
       - run: git diff
       - run: npm ci
       # - run: npm test --runInBand
-      - run: npm test
+      - run: npm test -- --verbose=true
         if: ${{ matrix.config.test == '1' }}
 
   publish-npm:
