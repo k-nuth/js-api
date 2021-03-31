@@ -18,3 +18,5 @@ export declare function fromNative(native: any, destroy: boolean): Output;
 export declare function fromData(data: Uint8Array): Result<Output>; 
 
 export declare function toData(obj: Output, wire: boolean): Uint8Array;
+
+export declare function destruct(native: any): void; 
