@@ -229,7 +229,16 @@ beforeAll(async () => {
 afterAll(async () => {
     console.log("afterAll 1");
     await new Promise(resolve => setTimeout(resolve, 3000));
-    console.log("afterAll 2");
+    console.log("afterAll 2 1");
+    console.log("afterAll 2 2");
+    console.log("afterAll 2 3");
+    console.log("afterAll 2 4");
+    console.log("afterAll 2 5");
+    console.log("afterAll 2 6");
+    console.log("afterAll 2 7");
+    console.log("afterAll 2 8");
+    console.log("afterAll 2 9");
+
     node_.close();
     console.log("afterAll 3");
 });
