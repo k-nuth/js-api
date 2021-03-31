@@ -40,6 +40,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "kth-bch-native": "^0.22.0",
+    "log-timestamp": "^0.3.0",
     "memoizee": "^0.4.14"
   },
   "devDependencies": {
