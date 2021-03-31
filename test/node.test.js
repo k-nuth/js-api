@@ -218,6 +218,12 @@ function sleep(ms) {
     return new Promise((r) => setTimeout(r, ms));
 }
 
+function sleepBusy(ms) {
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + ms) { /* do nothing */ } 
+}
+  
+
 var node_;
 beforeAll(async () => {
     const setts = settings.getDefault(network.network.mainnet);
@@ -232,34 +238,65 @@ beforeAll(async () => {
 });
 
 
+
 afterAll(() => {
     console.log("afterAll 1");
     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
 
-    sleep(500).then(() => {
-        console.log("afterAll 2 1");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 2");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 3");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 4");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 5");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 6");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 7");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 8");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        console.log("afterAll 2 9");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    
-        node_.close();
-        console.log("afterAll 3");
-    });
+    sleepBusy(5000);
+
+    console.log("afterAll 2 1");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 2");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 3");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 4");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 5");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 6");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 7");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 8");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    console.log("afterAll 2 9");
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+
+    node_.close();
+    console.log("afterAll 3");
 });
+
+
+// afterAll(() => {
+//     console.log("afterAll 1");
+//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+
+//     sleep(500).then(() => {
+//         console.log("afterAll 2 1");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 2");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 3");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 4");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 5");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 6");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 7");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 8");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+//         console.log("afterAll 2 9");
+//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+    
+//         node_.close();
+//         console.log("afterAll 3");
+//     });
+// });
 
 
 // afterAll(async () => {
