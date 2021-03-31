@@ -15,16 +15,21 @@ const primitives = require('../src/primitives');
 
 async function pushBlock(chain, hexStr) {
     const bytes = enc.hexStrToBytes(hexStr);
+    console.log("bytes", bytes);
     const result = block.fromData(1, bytes);
+    console.log("result", result);
+
     if ( ! result.ok) {
         throw "Invalid block";
     }
     const res = await chain.organizeBlock(result.obj);
+    console.log("res", res);
 }
 
 async function fillBlocks(chain) {
     const hash = enc.Hash.strToBytes('00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee')
     const ret = await chain.getBlockHeight(hash);
+    console.log("ret", ret);
     if (ret[1] == 170) {
         return;
     }
@@ -216,7 +221,8 @@ beforeAll(async () => {
     node_ = new node.Node(setts, true);
 
     const res = await node_.launch(primitives.startModules.justChain);
-    expect(res).toBe(0);
+    console.log("res", res);
+    // expect(res).toBe(0);
     await fillBlocks(node_.chain);
 });
 
