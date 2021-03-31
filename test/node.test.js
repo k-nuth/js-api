@@ -238,12 +238,11 @@ beforeAll(async () => {
 });
 
 
-
 afterAll(() => {
     console.log("afterAll 1");
     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
 
-    sleepBusy(5000);
+    // sleepBusy(5000);
 
     console.log("afterAll 2 1");
     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -264,7 +263,7 @@ afterAll(() => {
     console.log("afterAll 2 9");
     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
 
-    node_.close();
+    // node_.close();
     console.log("afterAll 3");
 });
 
