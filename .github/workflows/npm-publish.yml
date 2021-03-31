@@ -19,8 +19,8 @@ jobs:
     - uses: actions/setup-node@v2
     - name: Install modules 
       run: npm install 
-    - name: Run ESLint
-      run: npm run lint:github-action
+    # - name: Run ESLint
+    #   run: npm run lint:github-action
       
   generate-matrix:
     needs: execute-linter
