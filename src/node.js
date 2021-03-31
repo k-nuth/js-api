@@ -27,6 +27,9 @@ class Node {
     get chain() {
         console.log("chain() - 1 - ", this.native);
         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        if ( ! this.native) return undefined;
+        console.log("chain() - 2 - ", this.native);
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
         const res = new chain.Chain(kth.node_get_chain(this.native));
         return res;
     }
