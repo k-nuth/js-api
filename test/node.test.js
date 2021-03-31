@@ -213,7 +213,7 @@ beforeAll(async () => {
     const setts = settings.getDefault(network.network.mainnet);
     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
 
-    node_ = new node.Node(setts, false);
+    node_ = new node.Node(setts, true);
 
     const res = await node_.launch(primitives.startModules.justChain);
     expect(res).toBe(0);
