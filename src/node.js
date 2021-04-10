@@ -25,27 +25,27 @@ class Node {
     }
 
     get chain() {
-        console.log("chain() - 1 - ", this.native);
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-        if ( ! this.native) return undefined;
-        console.log("chain() - 2 - ", this.native);
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        // console.log("chain() - 1 - ", this.native);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        if (!this.native) return undefined;
+        // console.log("chain() - 2 - ", this.native);
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
         const res = new chain.Chain(kth.node_get_chain(this.native));
         return res;
     }
 
     close() {
-        console.log("close() - 1");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        // console.log("close() - 1");
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
         kth.node_signal_stop(this.native);
-        console.log("close() - 2");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        // console.log("close() - 2");
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
         kth.node_destruct(this.native);
-        console.log("close() - 3");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        // console.log("close() - 3");
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
         this.native = null;
-        console.log("close() - 4");
-        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
+        // console.log("close() - 4");
+        // console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
     async launch(mods) {
