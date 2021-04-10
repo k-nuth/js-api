@@ -233,7 +233,7 @@ beforeAll(async () => {
 
 
 afterAll(() => {
-    // sleepBusy(1000);
+    sleepBusy(3000);
     node_.close();
 });
 
