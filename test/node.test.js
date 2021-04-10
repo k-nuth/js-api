@@ -16,21 +16,17 @@ require('log-timestamp');
 
 async function pushBlock(chain, hexStr) {
     const bytes = enc.hexStrToBytes(hexStr);
-    // console.log("bytes", bytes);
     const result = block.fromData(1, bytes);
-    // console.log("result", result);
 
     if ( ! result.ok) {
         throw "Invalid block";
     }
     const res = await chain.organizeBlock(result.obj);
-    // console.log("res", res);
 }
 
 async function fillBlocks(chain) {
     const hash = enc.Hash.strToBytes('00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee')
     const ret = await chain.getBlockHeight(hash);
-    console.log("ret", ret);
     if (ret[1] == 170) {
         return;
     }
@@ -220,9 +216,8 @@ function sleep(ms) {
 
 function sleepBusy(ms) {
     var now = new Date().getTime();
-    while(new Date().getTime() < now + ms) { /* do nothing */ } 
+    while(new Date().getTime() < now + ms) { /* do nothing */ }
 }
-  
 
 var node_;
 beforeAll(async () => {
@@ -232,106 +227,19 @@ beforeAll(async () => {
     node_ = new node.Node(setts, true);
 
     const res = await node_.launch(primitives.startModules.justChain);
-    console.log("res", res);
-    // expect(res).toBe(0);
+    expect(res).toBe(0);
     await fillBlocks(node_.chain);
 });
 
 
 afterAll(() => {
-    console.log("afterAll 1");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-    // sleepBusy(5000);
-
-    console.log("afterAll 2 1");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 2");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 3");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 4");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 5");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 6");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 7");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 8");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    console.log("afterAll 2 9");
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-    // node_.close();
-    console.log("afterAll 3");
+    // sleepBusy(1000);
+    node_.close();
 });
 
-
-// afterAll(() => {
-//     console.log("afterAll 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     sleep(500).then(() => {
-//         console.log("afterAll 2 1");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 2");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 3");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 4");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 5");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 6");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 7");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 8");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 9");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-    
-//         node_.close();
-//         console.log("afterAll 3");
-//     });
-// });
-
-
-// afterAll(async () => {
-//     console.log("afterAll 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     await new Promise(resolve => setTimeout(resolve, 5000));
-//     console.log("afterAll 2 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 2");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 3");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 4");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 5");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 6");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 7");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 8");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 9");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     node_.close();
-//     console.log("afterAll 3");
-// });
-
 test('retrieves the right chain height', async () => {
-    console.log("before test");
     const h = await node_.chain.getLastHeight();
-    console.log("getLastHeight", h);
     expect(await node_.chain.getLastHeight()).toEqual(170);
-    console.log("after test");
 });
 
 // test('getBlockHeaderByHeight', async () => {
