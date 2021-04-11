@@ -10,8 +10,6 @@ const transaction = require('./transaction');
 
 const async_chain = {
     fetch_last_height: Promise.promisify(kth.chain_fetch_last_height),
-    //   , fetch_block_height: Promise.promisify(kth.chain_fetch_block_height)
-
     fetch_block_height: (...args) => {
         // return new Promise((resolve, reject) => {
         return new Promise((resolve) => {
@@ -22,13 +20,49 @@ const async_chain = {
         });
     },
 
-    fetch_block_header_by_height: Promise.promisify(kth.chain_fetch_block_header_by_height, { multiArgs: true }),
-    fetch_block_header_by_hash: Promise.promisify(kth.chain_fetch_block_header_by_hash, { multiArgs: true }),
-    fetch_block_by_height: Promise.promisify(kth.chain_fetch_block_by_height, { multiArgs: true }),
-    fetch_block_by_hash: Promise.promisify(kth.chain_fetch_block_by_hash, { multiArgs: true }),
-
-    fetch_transaction: Promise.promisify(kth.chain_fetch_transaction, { multiArgs: true }),
-    fetch_transaction_position: Promise.promisify(kth.chain_fetch_transaction_position, { multiArgs: true }),
+    // fetch_block_header_by_height: Promise.promisify(kth.chain_fetch_block_header_by_height, { multiArgs: true }),
+    fetch_block_header_by_height: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_block_header_by_height(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
+    fetch_block_header_by_hash: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_block_header_by_hash(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
+    fetch_block_by_height: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_block_by_height(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
+    fetch_block_by_hash: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_block_by_hash(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
+    fetch_transaction: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_transaction(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
+    fetch_transaction_position: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_transaction_position(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
 
     // Organizers
     //   organize_block: Promise.promisify(kth.chain_organize_block, {multiArgs: true}),
@@ -42,7 +76,14 @@ const async_chain = {
         });
     },
 
-    organize_transaction: Promise.promisify(kth.chain_organize_transaction, { multiArgs: true })
+    // organize_transaction: Promise.promisify(kth.chain_organize_transaction, { multiArgs: true })
+    organize_transaction: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_organize_transaction(...args, (err) => {
+                resolve(err);
+            });
+        });
+    }
 };
 
 class Chain {
