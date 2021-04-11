@@ -12,6 +12,8 @@ const network = require('../src/config/network');
 const settings = require('../src/config/settings');
 const primitives = require('../src/primitives');
 
+const FIRST_NON_COINBASE_BLOCK_HEIGHT = 170;
+
 require('log-timestamp');
 
 async function pushBlock(chain, hexStr) {
@@ -215,7 +217,7 @@ function sleep(ms) {
 }
 
 function sleepBusy(ms) {
-    var now = new Date().getTime();
+    const now = new Date().getTime();
     while(new Date().getTime() < now + ms) { /* do nothing */ }
 }
 
@@ -224,7 +226,7 @@ beforeAll(async () => {
     const setts = settings.getDefault(network.network.mainnet);
     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
 
-    node_ = new node.Node(setts, true);
+    node_ = new node.Node(setts, false);
 
     const res = await node_.launch(primitives.startModules.justChain);
     expect(res).toBe(0);
@@ -237,13 +239,336 @@ afterAll(() => {
     node_.close();
 });
 
+function verifyGenesisBlockHeader(header) {
+    expect(header).not.toBeNull();
+    expect(header).toBeTruthy();
+    expect(enc.Hash.bytesToStr(header.hash)).toEqual("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    expect(enc.Hash.bytesToStr(header.merkle)).toEqual("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    expect(enc.Hash.bytesToStr(header.previousBlockHash)).toEqual("0000000000000000000000000000000000000000000000000000000000000000");
+    expect(header.version).toEqual(1);
+    expect(header.bits).toEqual(486604799);
+    expect(header.nonce).toEqual(2083236893);
+    expect(header.timestamp).toEqual(1231006505);
+}
+
+function checkFirstNonCoinbaseTxFromHeight170Inputs(tx) {
+    expect(tx.inputs.length).toEqual(1);
+    //expect(50000000).toEqual(tx.TotalInputValue); //TODO Blockdozer says this is 50 BTC
+    //Input 0
+    const input = tx.inputs[0];
+    expect(input.sequence).toEqual(4294967295);
+    expect(input.rawData(true).length).toEqual(113);
+    expect(input.rawData(false).length).toEqual(111);
+    //TODO(fernando): implement
+    // expect(input.GetSignatureOperations(true)).toEqual(0);
+    // expect(input.GetSignatureOperations(false)).toEqual(0);
+    // expect(input.IsFinal).toBeTruthy();
+    // expect(input.IsValid).toBeTruthy();
+
+    const script = input.script;
+    //TODO(fernando): implement
+    // expect(script.GetSigOps(true)).toEqual(0);
+    // expect(script.GetSigOps(false)).toEqual(0);
+    // expect(script.IsValid).toBeTruthy();
+    // expect(script.OperationsAreValid).toBeTruthy();
+    expect(script.rawData().length).toEqual(72);
+    // expect(script.ToString(0)).toEqual("[304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901]");
+}
+
+function checkFirstNonCoinbaseTxFromHeight170Outputs(tx) {
+    expect(tx.outputs.length).toEqual(2);
+
+    //TODO(fernando): implement
+    // expect(tx.TotalOutputValue).toEqual(5000000000);
+
+    //Output 0
+    const output0 = tx.outputs[0];
+    expect(output0.rawData(true).length).toEqual(76);
+    expect(output0.rawData(true).length).toEqual(76);
+    expect(output0.value).toEqual(1000000000);
+    //TODO(fernando): implement
+    // expect(output0.IsValid).toBeTruthy();
+    // expect(output0.SignatureOperations).toEqual(1);
+
+    const script0 = output0.script;
+
+    //TODO(fernando): implement
+    //script0.GetEmbeddedSigOps
+    // expect(1).toEqual(script0.GetSigOps(true));
+    // expect(1).toEqual(script0.GetSigOps(false));
+    // expect(script0.IsValid).toBeTruthy();
+    // expect(script0.OperationsAreValid).toBeTruthy();
+    expect(script0.rawData().length).toEqual(67);
+    // expect(script0.ToString(0)).toEqual("[04ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84c] checksig");
+
+    //Output 1
+    const output1 = tx.outputs[1];
+    expect(output1.rawData(true).length).toEqual(76);
+    expect(output1.rawData(true).length).toEqual(76);
+    // expect(output1.IsValid).toBeTruthy();
+    // expect(output1.SignatureOperations).toEqual(1);
+    expect(output1.value).toEqual(4000000000);
+
+    const script1 = output1.script;
+    // //script1.GetEmbeddedSigOps
+    // expect(script1.GetSigOps(true)).toEqual(1);
+    // expect(script1.GetSigOps(false)).toEqual(1);
+    // expect(script1.IsValid).toBeTruthy();
+    // expect(script1.OperationsAreValid).toBeTruthy();
+    expect(script1.rawData().length).toEqual(67);
+    // expect(script1.ToString(0)).toEqual("[0411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3] checksig");
+}
+
+function checkFirstNonCoinbaseTxFromHeight170(tx, txHashHexStr) {
+    expect(tx.version).toEqual(1);
+    expect(enc.Hash.bytesToStr(tx.hash)).toEqual(txHashHexStr);
+    expect(tx.locktime).toEqual(0);
+    expect(tx.rawData(true).length).toEqual(275);
+    expect(tx.rawData(false).length).toEqual(275);
+
+    // TODO(fernando): implement
+    // expect(tx.fees).toEqual(0);
+    // expect(0 <= tx.SignatureOperations && tx.SignatureOperations <= Math.Pow(2, 64)).toBeTruthy();
+    // expect(2).toEqual(tx.GetSignatureOperationsBip16Active(true));
+    // expect(2).toEqual(tx.GetSignatureOperationsBip16Active(false)); //TODO(dario) Does it make sense that it's the same value?
+    // expect(0).toEqual(tx.TotalInputValue);
+    // expect(tx.TotalOutputValue).toEqual(5000000000); //#50 BTC = 5 M Satoshi
+    // expect(tx.IsCoinbase).toBeTruthy();
+    // expect(tx.IsNullNonCoinbase).toBeTruthy();
+    // expect(tx.IsOversizeCoinbase).toBeTruthy();
+    // expect(tx.IsOverspent).toBeTruthy(); //TODO Why?
+    // expect(tx.IsDoubleSpend(true)).toBeTruthy();
+    // expect(tx.IsDoubleSpend(false)).toBeTruthy();
+    // expect(tx.IsMissingPreviousOutputs).toBeTruthy(); //TODO Why?
+    // expect(tx.IsFinal(FIRST_NON_COINBASE_BLOCK_HEIGHT, 0)).toBeTruthy();
+    // expect(tx.IsLocktimeConflict).toBeTruthy();
+    checkFirstNonCoinbaseTxFromHeight170Inputs(tx);
+    checkFirstNonCoinbaseTxFromHeight170Outputs(tx);
+}
+
+function VerifyBlock170Header(header) {
+    expect(header).not.toBeNull();
+    expect(enc.Hash.bytesToStr(header.hash)).toEqual("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
+    expect(enc.Hash.bytesToStr(header.merkle)).toEqual("7dac2c5666815c17a3b36427de37bb9d2e2c5ccec3f8633eb91a4205cb4c10ff");
+    expect(enc.Hash.bytesToStr(header.previousBlockHash)).toEqual("000000002a22cfee1f2c846adbd12b3e183d4f97683f85dad08a79780a84bd55");
+    expect(header.version).toEqual(1);
+    expect(header.bits).toEqual(486604799);
+    expect(header.nonce).toEqual(1889418792);
+    expect(header.timestamp).toEqual(1231731025);
+}
+
+// private static dynamic GetBlockDataFromExternalSource(UInt64 height) {
+//     string uri = @"https://blockchain.info/block-height/" + height + "?format=json";
+//     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+//     HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+//     Stream stream = response.GetResponseStream())
+//     StreamReader reader = new StreamReader(stream)) {
+//         const jsonObject = JsonConvert.DeserializeObject<dynamic>(reader.ReadToEnd());
+//         return jsonObject;
+//     }
+// }
+
+// private static void verifyGenesisBlockHeader(IHeader header) {
+//     expect().not.toBeNull(header);
+//     expect("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").toEqual(enc.Hash.bytesToStr(header.Hash));
+//     expect("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b").toEqual(enc.Hash.bytesToStr(header.Merkle));
+//     expect("0000000000000000000000000000000000000000000000000000000000000000").toEqual(enc.Hash.bytesToStr(header.PreviousBlockHash));
+//     expect(1).toEqual(header.Version);
+//     expect(486604799).toEqual(header.Bits);
+//     expect(2083236893).toEqual(header.Nonce);
+//     DateTime utcTime = DateTimeOffset.FromUnixTimeSeconds(header.Timestamp).DateTime;
+//     expect("2009-01-03 18:15:05", utcTime.ToString("yyyy-MM-dd HH:mm:ss"));
+// }
+
+// public void GetMempoolTransactions', async () => {
+//     const addresses = new PaymentAddressList()) {
+//         addresses.Add(new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7"));
+//         const list = node_.chain.GetMempoolTransactions(addresses, true))
+//         {
+//             expect().toBeTruthy(list.length >= 0);
+//         }
+//     }
+// }
+
 test('retrieves the right chain height', async () => {
     const h = await node_.chain.getLastHeight();
     expect(await node_.chain.getLastHeight()).toEqual(170);
 });
 
-// test('getBlockHeaderByHeight', async () => {
-//     const ret = await node_.chain.getBlockHeaderByHeight(0);
-//     verifyGenesisBlockHeader(ret.Result.BlockData);
-//     // expect(await node_.chain.getLastHeight()).toEqual(170);
+test('getBlockHeaderByHeight', async () => {
+    const ret = await node_.chain.getBlockHeaderByHeight(0);
+    expect(ret[0]).toEqual(err.errors.success);
+    expect(ret[2]).toEqual(0);
+    verifyGenesisBlockHeader(ret[1]);
+});
+
+test('getBlockHeaderByHash', async () => {
+    const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    const ret = await node_.chain.getBlockHeaderByHash(hash);
+    expect(ret[0]).toEqual(err.errors.success);
+    verifyGenesisBlockHeader(ret[1]);
+});
+
+test('getBlockByHeight', async () => {
+    const ret = await node_.chain.getBlockByHeight(0);
+    expect(ret[0]).toEqual(err.errors.success);
+    verifyGenesisBlockHeader(ret[1].header);
+});
+
+test('getBlockByHash', async () => {
+    const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    const ret = await node_.chain.getBlockByHash(hash);
+    expect(ret[0]).toEqual(err.errors.success);
+    verifyGenesisBlockHeader(ret[1].header);
+});
+
+test('getBlockHeight', async () => {
+    const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    const ret = await node_.chain.getBlockHeight(hash);
+    expect(ret[0]).toEqual(err.errors.success);
+    expect(ret[1]).toEqual(0);
+});
+
+test('getTransactionGenesis', async () => {
+    const txHashHexStr = "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b";
+    const hash = enc.Hash.strToBytes(txHashHexStr);
+    const ret = await node_.chain.getTransaction(hash, true);
+    expect(ret[0]).toEqual(err.errors.success);
+    const tx = ret[1];
+    expect(ret[2]).toEqual(0);         // index of the Tx inside the Block
+    expect(ret[3]).toEqual(0);         // block height
+});
+
+test('getTransaction', async () => {
+    const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
+    const hash = enc.Hash.strToBytes(txHashHexStr);
+    const ret = await node_.chain.getTransaction(hash, true);
+    const tx = ret[1];
+    expect(ret[0]).toEqual(err.errors.success);
+    expect(ret[2]).toEqual(1);
+    expect(ret[3]).toEqual(FIRST_NON_COINBASE_BLOCK_HEIGHT);
+    checkFirstNonCoinbaseTxFromHeight170(tx, txHashHexStr);
+});
+
+test('GetTransactionPosition', async () => {
+    const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
+    const hash = enc.Hash.strToBytes(txHashHexStr);
+    const ret = await node_.chain.getTransactionPosition(hash, true);
+    expect(ret[0]).toEqual(err.errors.success);
+    expect(ret[1]).toEqual(1);
+    expect(ret[2]).toEqual(FIRST_NON_COINBASE_BLOCK_HEIGHT);
+});
+
+test('getBlockByHash170', async () => {
+    const hash = enc.Hash.strToBytes("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
+    const ret = await node_.chain.getBlockByHash(hash);
+    expect(ret[0]).toEqual(err.errors.success);
+    VerifyBlock170Header(ret[1].header);
+});
+
+test('organizeBlock', async () => {
+    const ret = await node_.chain.getBlockByHeight(0);
+    expect(ret[0]).toEqual(err.errors.success);
+    const block = ret[1];
+    const retOrg = await node_.chain.organizeBlock(block);
+    expect(retOrg).toEqual(err.errors.duplicateBlock);
+});
+
+test('OrganizeTransaction', async () => {
+    const ret = await node_.chain.getBlockByHeight(0);
+    expect(ret[0]).toEqual(err.errors.success);
+    const block = ret[1];
+    const tx = block.transactions[0];
+    const retOrg = await node_.chain.organizeTransaction(tx);
+    expect(retOrg).toEqual(err.errors.coinbaseTransaction);
+});
+
+
+//TODO(fernando): implement
+// test('getSpend', async () => {
+//     const hash = enc.Hash.strToBytes("0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9");
+//     const outputPoint = new OutputPoint(hash, 0);
+//     const ret = await node_.chain.GetSpend(outputPoint);
+
+//     expect(ret.ErrorCode, ErrorCode.Success);
+//     // expect().not.toBeNull(ret.Result);
+//     expect(enc.Hash.bytesToStr(ret.Result.Hash)).toEqual("f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16");
+//     expect(ret.Result.Index).toEqual(0);
 // });
+
+
+//TODO(fernando): implement
+// test('GetMerkleBlockByHash', async () => {
+//     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+//     const ret = await node_.chain.GetMerkleBlockByHash(hash)) {
+//         expect(ret[0]).toEqual(err.errors.success);
+//         expect().not.toBeNull(ret[0]);
+//         expect(0).toEqual(ret.Result.BlockHeight);
+//         expect(1).toEqual(ret[0].TotalTransactionCount);
+//         verifyGenesisBlockHeader(ret[0].Header);
+//     }
+// });
+
+
+//TODO(fernando): implement
+// test('GetMerkleBlockByHeight', async () => {
+//     //https://blockchain.info/es/block-height/0
+//     const ret = await node_.chain.GetMerkleBlockByHeight(0)) {
+//         expect(ret[0]).toEqual(err.errors.success);
+//         expect().not.toBeNull(ret[0]);
+//         expect(0).toEqual(ret.Result.BlockHeight);
+//         expect(1).toEqual(ret[0].TotalTransactionCount);
+//         verifyGenesisBlockHeader(ret[0].Header);
+//     }
+// });
+
+//TODO(fernando): implement
+// test('GetBlockHeaderByHashTxSizes', async () => {
+//     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+//     const ret = await node_.chain.getBlockHeaderByHashTxSizes(hash);
+//     console.log(ret);
+//     expect(ret[0]).toEqual(err.errors.success);
+//     verifyGenesisBlockHeader(ret.Result.Header.BlockData);
+// });
+
+//TODO(fernando): implement
+// test('getBlockByHeightHashTimestamp', async () => {
+//     const ret = await node_.chain.getBlockByHeightHashTimestamp(0);
+//     expect(ret[0]).toEqual(err.errors.success);
+//     expect("2009-01-03 18:15:05").toEqual(ret.Result.BlockTimestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+// }
+
+//TODO(fernando): implement
+// test('GetHistory', async () => {
+//     const address = new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7")) {
+//         const ret = await node_.chain.GetHistory(address,10,1))
+//         {
+//             foreach (const x in ret.Result) {
+
+//             }
+//             expect().toBeTruthy(ret.Result.length >= 0);
+//         }
+//     }
+// }
+
+//TODO(fernando): implement
+// test('GetConfirmedTransactions', async () => {
+//     const address = new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7"))
+//     const ret = await node_.chain.GetConfirmedTransactions(address,10,1)) {
+//         expect().toBeTruthy(ret.Result.length >= 0);
+//     }
+// }
+
+//TODO(fernando): implement
+// test('ValidateTransaction', async () => {
+//     const block = await node_.chain.getBlockByHeight(0)) {
+//         const ret = await node_.chain.ValidateTransaction((Transaction)block.Result.BlockData.GetNthTransaction(0));
+//         expect().toBeTruthy(ret.ErrorCode == ErrorCode.CoinbaseTransaction);
+//     }
+// }
+
+//TODO(fernando): implement
+// public void IsStale', async () => {
+//     const ret = node_.chain.IsStale;
+//     expect().toBeTruthy(ret);
+// }
