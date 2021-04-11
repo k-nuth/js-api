@@ -103,32 +103,32 @@ class Chain {
 
     async getBlockHeaderByHeight(height) {
         const res = await async_chain.fetch_block_header_by_height(this.native, height);
-        return [header.fromNative(res[0]), res[1]];
+        return [res[0], header.fromNative(res[1]), res[2]];
     }
 
     async getBlockHeaderByHash(hash) {
         const res = await async_chain.fetch_block_header_by_hash(this.native, hash);
-        return [header.fromNative(res[0]), res[1]];
+        return [res[0], header.fromNative(res[1]), res[2]];
     }
 
     async getBlockByHeight(height) {
         const res = await async_chain.fetch_block_by_height(this.native, height);
-        return [block.fromNative(res[0]), res[1]];
+        return [res[0], block.fromNative(res[1]), res[2]];
     }
 
     async getBlockByHash(hash) {
         const res = await async_chain.fetch_block_by_hash(this.native, hash);
-        return [block.fromNative(res[0]), res[1]];
+        return [res[0], block.fromNative(res[1]), res[2]];
     }
 
     async getTransaction(hash, requireConfirmed) {
         const res = await async_chain.fetch_transaction(this.native, hash, requireConfirmed);
-        return [transaction.fromNative(res[0]), res[1]];
+        return [res[0], transaction.fromNative(res[1]), res[2], res[3]];
     }
 
     async getTransactionPosition(hash, requireConfirmed) {
         const res = await async_chain.fetch_transaction_position(this.native, hash, requireConfirmed);
-        return [transaction.fromNative(res[0]), res[1]];
+        return [res[0], res[1], res[2]];
     }
 
     // Organizers
@@ -139,7 +139,7 @@ class Chain {
 
     async organizeTransaction(transaction) {
         const res = await async_chain.organize_transaction(this.native, transaction.toNative());
-        return [res[0]];
+        return res;
     }
 
     //TODO(fernando): Merkle Block
