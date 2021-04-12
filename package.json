@@ -1,5 +1,5 @@
 {
-  "name": "@k-nuth/bch",
+  "name": "@knuth/bch",
   "version": "0.9.1",
   "description": "Bitcoin Cash development platform for Javascript and Typescript applications",
   "main": "src/kth.js",
@@ -39,8 +39,7 @@
   "homepage": "https://github.com/k-nuth/js-api#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "kth-bch-native": "^0.23.0",
-    "log-timestamp": "^0.3.0",
+    "@knuth/bch-native": "^0.24.0",
     "memoizee": "^0.4.14"
   },
   "devDependencies": {

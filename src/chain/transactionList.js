@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-const kth = require('kth-bch-native');
+const kth = require('@knuth/bch-native');
 const transaction = require('./transaction');
 const genericList = require('./genericList');
 
