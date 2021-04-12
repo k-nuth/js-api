@@ -16,7 +16,7 @@ const transaction = require('./chain/transaction');
 const settings = require('./config/settings');
 const sett_network = require('./config/network');
 
-class BCH {
+class KTH {
     constructor() {
         this.node = node;
         this.enc = enc;
@@ -35,4 +35,4 @@ class BCH {
     }
 }
 
-module.exports = new BCH();
+module.exports = new KTH();
