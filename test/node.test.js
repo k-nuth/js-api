@@ -14,8 +14,6 @@ const primitives = require('../src/primitives');
 
 const FIRST_NON_COINBASE_BLOCK_HEIGHT = 170;
 
-require('log-timestamp');
-
 async function pushBlock(chain, hexStr) {
     const bytes = enc.hexStrToBytes(hexStr);
     const result = block.fromData(1, bytes);
