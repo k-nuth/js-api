@@ -1,5 +1,5 @@
 {
-  "name": "@kth/bch",
+  "name": "@k-nuth/bch",
   "version": "0.9.1",
   "description": "Bitcoin Cash development platform for Javascript and Typescript applications",
   "main": "src/index.js",
