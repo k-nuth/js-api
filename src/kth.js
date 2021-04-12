@@ -3,7 +3,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 const node = require('./node');
+
 const enc = require('./encoding');
+const primitives = require('./primitives');
 
 const block = require('./chain/block');
 const header = require('./chain/header');
@@ -20,7 +22,9 @@ class KTH {
     constructor() {
         this.node = node;
         this.enc = enc;
+        this.startModules = primitives.startModules;
 
+        //Chain
         this.block = block;
         this.header = header;
         this.input = input;
@@ -29,6 +33,7 @@ class KTH {
         this.script = script;
         this.transaction = transaction;
 
+        //Config
         this.settings = settings;
         this.network = sett_network.network;
         // const setts = settings.getDefault(network.network.mainnet);
