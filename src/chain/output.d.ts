@@ -5,17 +5,17 @@
 import { Script } from './script'; 
 import { Result } from '../result'; 
 
-export declare class Output { 
-  constructor(value: number, script: Script); 
+export declare class Output {
+  constructor(value: number, script: Script);
 
   toNative(): any;
 
-  rawData(wire: boolean): Uint8Array; 
+  rawData(wire: boolean): Uint8Array;
 }
 
 export declare function fromNative(native: any, destroy: boolean): Output;
 
-export declare function fromData(data: Uint8Array): Result<Output>; 
+export declare function fromData(data: Uint8Array): Result<Output>;
 
 export declare function toData(obj: Output, wire: boolean): Uint8Array;
 
