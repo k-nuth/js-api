@@ -2,12 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-import { Script } from './script'; 
-import { Output } from './output'; 
+import { Script } from './script';
+import { OutputPoint } from './outputPoint'; 
 import { Result } from '../result'; 
 
 export declare class Input { 
-  constructor(previousOutpoint: Output, script: Script, sequence: Number); 
+  constructor(previousOutpoint: OutputPoint, script: Script, sequence: Number); 
 
   toNative(): any;
 
