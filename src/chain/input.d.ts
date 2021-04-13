@@ -7,7 +7,7 @@ import { OutputPoint } from './outputPoint';
 import { Result } from '../result'; 
 
 export declare class Input { 
-  constructor(previousOutpoint: OutputPoint, script: Script, sequence: Number); 
+  constructor(previousOutpoint: OutputPoint, script: Script, sequence: number); 
 
   toNative(): any;
 
