@@ -7,7 +7,7 @@ import { Input } from './input';
 import { Result } from '../result'; 
 
 export declare class Transaction {
-  constructor(version: Number, locktime: Number, inputs: Input[], outputs: Output[]); 
+  constructor(version: number, locktime: number, inputs: Input[], outputs: Output[]); 
 
   toNative(): any; 
 
