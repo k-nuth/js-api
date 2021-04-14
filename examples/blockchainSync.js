@@ -38,7 +38,7 @@ async function comeBackAfterTheBCHHardFork(node) {
 }
 
 function shutdown() {
-    console.log('graceful shutdown ...');
+    console.log('Graceful shutdown ...');
     running_ = false;
 }
 
