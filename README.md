@@ -1,31 +1,25 @@
-<img width="200px" src="https://github.com/k-nuth/js-api/raw/master/docs/images/kth-purple.png" />
-
 # Javascript API
 
 > Bitcoin Cash full node as a Javascript library
 
-[![Latest Release](https://img.shields.io/nuget/v/kth-bch?logo=nuget&label=release&style=for-the-badge)](https://www.nuget.org/packages/kth-bch)
-<a target="_blank" href="https://ci.appveyor.com/projects/k-nuth/js-api">![Build Status][badge.Appveyor]</a> 
+[![Version](https://img.shields.io/npm/v/@psf/bch-js)](https://www.npmjs.com/package/@psf/bch-js)
+[![Downloads/week](https://img.shields.io/npm/dw/@psf/bch-js)](https://npmjs.org/package/@psf/bch-js)
+[![License](https://img.shields.io/npm/l/@psf/bch-js)](https://github.com/Permissionless-Software-Foundation/bch-js/blob/master/LICENSE.md)
+[![js-standard-style](https://img.shields.io/badge/javascript-standard%20code%20style-green.svg?style=flat-square)](https://github.com/feross/standard)
+
+
+
+[![NPM Version](https://img.shields.io/npm/v/@knuth/bch?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/@knuth/bch)
+[![NPM Version](https://img.shields.io/npm/v/@knuth/bch?logo=npm&label=release&style=for-the-badge)](https://www.nuget.org/packages/kth-bch)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY%2Fl8WUAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTCtCgrAAAADB0lEQVR4XtWagXETMRREUwIlUAIlUAodQAl0AJ1AB9BB6AA6gA6MduKbkX%2BevKecNk525jHO3l%2Fp686xlJC70%2Bl0C942vjV%2Bn9FreVQbBc0wWujfRpW8Z78JaIb53hhJ1ygTA80w9PQ36duBMjHQHPCuoQZfutSjeqU1PAJN4E3j2pN7aVKv6pnWcgGawNfGa5N6prVcgGZBn8yvVXZXQbOgPXokXaPMNZwoc41D%2FaHZ8b7hpBrKjnCizIjD%2FaHZ8aPR6%2BeZXqqh7Agnyow43B%2BaZz40qnQ36a6rlsYgnChDLOkPzTN1z%2B9PafU0N3OAcaIMsaQ%2FNBufG1X9JyrtDMr0Y4xwokxlWX%2BPjAYdemhPrWeDvYcPJ8r0LO3v4oszNfivQQuTp2u9qJGKE2V6lvZ38UVj9q3t3oqEE2U2lvfXF4t6qPjTqDUV1fRyhw8nymws768vfOr2NtqOqFY4UUZE%2BusL6VDRX7%2FGzOHDiTIi0t9WMPsUKzNPx4kysf62gmuHir3sPXw4USbWny485ZOc2PsJ7VTro%2F3pwp5DxV7qHq2xa41TrY%2F2J7PfJkaHir3UwwdtU061PtqfTP0CUaYm2v3LxCtoDI2lMWk8p1of7Y8K0jhRJgaaYZwoE0P%2FpFUndZqtP6T4BE2zC5qtP6T4BE2zC5qtPyRN8OvhZUQae3ZBtT7anyb49PA6Ivp5wKnWR%2FvbJkncZXr6wokysf62CXRCWjmJxhqd2JwoE%2BuvTqS37JGJlB39GLzhRJmN5f31gz8XTpSJgWYYJ8rEQDOME2VioBnGiTIx0AzjRJkYaIZxokwMNMM4USYGmmGcKBMDzTBOlImBZhgnysRAM4wTZWKgGcaJMjHQDONEmRhohnGiTAw0wzhRJgaaYZwoEwPNME6UiYFmGCfKxEAzjBNlYqAZxokyMdAMoL%2FO%2BNi4bzjpT1e%2BNFb8V7gFzUXMLHqk%2BM1A8wArFj1S5GagOUly0SMtuxloTnJrUU%2B7QXOSW4t62g2ak9xa1NNu0Jzk1qKednK6%2Bw9roIB8keT%2F3QAAAABJRU5ErkJggg%3D%3D)](LICENSE.md)
 <a target="_blank" href="https://t.me/knuth_cash">![Telegram][badge.telegram]</a>
 <a target="_blank" href="https://k-nuth.slack.com/">![Slack][badge.slack]</a>
 
 <p align="center"><img width="800px" src="docs/images/demo.png" /></p>
 
-Knuth Javascript API is a high performance implementation of the Bitcoin Cash protocol focused on users requiring extra performance and flexibility. It is a Bitcoin Cash node you can use as a library.
 
-## Prerequisites
 
-Knuth Javascript API is a wrapper over our [C++ libraries](https://github.com/k-nuth/node), therefore in order to use the Javascript library we will need the toolchain to build the C++ libraries. Don't panic, you won't have to manually build our C++ libraries, you just have to provide some prerequisites, our build system will take care of the rest.
-
-* [.NET Standard 2.0 compatible implementation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard). We suggest [.Net Core 3.1](https://docs.microsoft.com/en-us/dotnet/core/install/).
-* [Python PIP package-management system](https://pip.pypa.io/en/stable/installing/).
-
-To speed up the compilation, we provide some pre-built C++ libraries for some common computer platforms, but case there are no pre-built binaries for your platform, our build system will automatically try to build from source code. In such a scenario, the following requirements must be added to the previous ones:
-
-* C++17 [conforming compiler](https://en.cppreference.com/w/cpp/compiler_support). Could be [GCC8](https://gcc.gnu.org/), [Clang8](https://clang.llvm.org/) or [Visual Studio 2019](https://visualstudio.microsoft.com/vs/)
-* CMake building tool, version 3.8 or newer.
-
+[Knuth Javascript API](https://www.npmjs.com/package/@knuth/bch) is a high performance implementation of the Bitcoin Cash protocol focused on users requiring extra performance and flexibility. It is a Bitcoin Cash node you can use as a library.
 
 ## Getting started
 
@@ -33,16 +27,16 @@ To speed up the compilation, we provide some pre-built C++ libraries for some co
 ```
 $ mkdir HelloKnuth
 $ cd HelloKnuth
-$ TODO
+$ npm init
 ```
 
 2. Add a reference to our Javascript API package:
 
 ```
-$ TODO
+$ npm install @knuth/bch
 ```
 
-3. Edit `program.js` and write some code:
+3. Create a new file called `index.js` and write some code:
 
 ```Javascript
 //TODO
@@ -53,7 +47,7 @@ $ TODO
 4. Enjoy Knuth node as a Javascript library:
 
 ```
-$ dotnet run
+$ node index.js
 ```
 
 ## Issues
