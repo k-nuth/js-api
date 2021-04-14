@@ -10,8 +10,6 @@
 
 <p align="center"><img width="800px" src="docs/images/demo.png" /></p>
 
-
-
 [Knuth Javascript API](https://www.npmjs.com/package/@knuth/bch) is a high performance implementation of the Bitcoin Cash protocol focused on users requiring extra performance and flexibility. It is a Bitcoin Cash node you can use as a library.
 
 ## Getting started
@@ -32,8 +30,55 @@ $ npm install @knuth/bch
 3. Create a new file called `index.js` and write some code:
 
 ```Javascript
-//TODO
+const kth = require("@knuth/bch")
 
+let running_ = false;
+
+async function main() {
+    process.on('SIGINT', shutdown);
+    const config = kth.settings.getDefault(kth.network.mainnet);
+    const node = new kth.node.Node(config, false);
+    await node.launch(kth.startModules.all);
+    console.log("Knuth node has been launched.");
+    running_ = true;
+
+    const height = await node.chain.getLastHeight();
+    console.log(`Current height in local copy: ${height}`);
+
+    if (await comeBackAfterTheBCHHardFork(node)) {
+        console.log("Bitcoin Cash has been created!");
+    }
+
+    node.close();
+    console.log("Good bye!");
+}
+
+async function comeBackAfterTheBCHHardFork(node) {
+    const hfHeight = 478559;
+    while (running_) {
+        const height = await node.chain.getLastHeight();
+        if (height >= hfHeight) return true;
+        await sleep(10000);
+    }
+    return false;
+}
+
+function shutdown() {
+    console.log('graceful shutdown ...');
+    running_ = true;
+}
+
+function sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+}
+
+(async () => {
+    try {
+        await main();
+    } catch (e) {
+        console.log(e);
+    }
+})();
 
 ```
 
