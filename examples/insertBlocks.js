@@ -16,22 +16,18 @@ const primitives = require('../src/primitives');
 
 async function pushBlock(chain, hexStr) {
     const bytes = enc.hexStrToBytes(hexStr);
-    // console.log("bytes", bytes);
     const result = block.fromData(1, bytes);
-    // console.log("result", result);
 
     if ( ! result.ok) {
         throw "Invalid block";
     }
     const res = await chain.organizeBlock(result.obj);
-    // console.log("res", res);
 }
 
 async function fillBlocks(chain) {
     const hash = enc.Hash.strToBytes('00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee')
     const ret = await chain.getBlockHeight(hash);
-    // console.log("ret", ret);
-    if (ret[1] == 170) {
+    if (ret[1] >= 170) {
         return;
     }
 
@@ -223,8 +219,6 @@ function sleepBusy(ms) {
     while(new Date().getTime() < now + ms) { /* do nothing */ }
 }
 
-
-
 async function main() {
     const setts = settings.getDefault(network.network.mainnet);
     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
@@ -232,111 +226,18 @@ async function main() {
     const n = new node.Node(setts, true);
 
     const res = await n.launch(primitives.startModules.justChain);
-    // console.log("res", res);
-    // expect(res).toBe(0);
+    console.log("res", res);
     await fillBlocks(n.chain);
 
-    // console.log("before test");
     const h = await n.chain.getLastHeight();
     console.log("getLastHeight", h);
-    console.log("after test");
     // sleepBusy(5000);
-    console.log("after sleep");
 }
-
-
-// afterAll(() => {
-//     console.log("afterAll 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     // sleepBusy(5000);
-
-//     console.log("afterAll 2 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 2");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 3");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 4");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 5");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 6");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 7");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 8");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 9");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     // n.close();
-//     console.log("afterAll 3");
-// });
-
-
-// afterAll(() => {
-//     console.log("afterAll 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     sleep(500).then(() => {
-//         console.log("afterAll 2 1");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 2");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 3");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 4");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 5");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 6");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 7");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 8");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//         console.log("afterAll 2 9");
-//         console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//         n.close();
-//         console.log("afterAll 3");
-//     });
-// });
-
-
-// afterAll(async () => {
-//     console.log("afterAll 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     await new Promise(resolve => setTimeout(resolve, 5000));
-//     console.log("afterAll 2 1");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 2");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 3");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 4");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 5");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 6");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 7");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 8");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-//     console.log("afterAll 2 9");
-//     console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
-
-//     n.close();
-//     console.log("afterAll 3");
-// });
 
 (async () => {
     try {
         await main();
     } catch (e) {
-        // Deal with the fact the chain failed
+        console.log(e);
     }
 })();
