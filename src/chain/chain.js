@@ -91,12 +91,12 @@ class Chain {
         this.native = native;
     }
 
-    getLastHeight() {
+    async getLastHeight() {
         const res = async_chain.fetch_last_height(this.native);
         return res;
     }
 
-    getBlockHeight(hash) {
+    async getBlockHeight(hash) {
         const res = async_chain.fetch_block_height(this.native, hash);
         return res;
     }
