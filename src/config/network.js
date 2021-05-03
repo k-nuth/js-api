@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-const network = Object.freeze({
+const Network = Object.freeze({
     mainnet: 0,
     testnet: 1,
     regtest: 2,
@@ -10,4 +10,4 @@ const network = Object.freeze({
     scalenet: 4
 });
 
-exports.network = network;
+exports.Network = Network;
