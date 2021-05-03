@@ -9,9 +9,9 @@
 
 <p align="center"><img width="800px" src="docs/images/demo.png" /></p>
 
-[Knuth Javascript API](https://www.npmjs.com/package/@knuth/bch) is a high performance implementation of the Bitcoin Cash protocol focused on users requiring extra performance and flexibility. It is a Bitcoin Cash node you can use as a library.
+[Knuth Javascript/Typescript API](https://www.npmjs.com/package/@knuth/bch) is a high performance implementation of the Bitcoin Cash protocol focused on users requiring extra performance and flexibility. It is a Bitcoin Cash node you can use as a library.
 
-## Getting started
+## Getting started with Javascript
 
 1. Create a new Javascript console project:
 ```
@@ -85,6 +85,84 @@ function sleep(ms) {
 
 ```
 $ node index.js
+```
+
+## Getting started with Typescript
+
+1. Create a new Typescript console project:
+```
+$ mkdir HelloKnuth
+$ cd HelloKnuth
+$ npm init
+```
+
+2. Add a reference to our Typescript API package and TypeScript definitions for Node.js:
+
+```
+$ npm install @knuth/bch
+$ npm install @types/node
+
+```
+
+3. Create a new file called `index.ts` and write some code:
+
+```Typescript
+import * as kth from "@knuth/bch";
+
+let running_ = false;
+
+async function main() {
+    process.on('SIGINT', shutdown);
+    const config = kth.settings.getDefault(kth.network.mainnet);
+    const node = new kth.node.Node(config, false);
+    await node.launch(kth.startModules.all);
+    console.log("Knuth node has been launched.");
+    running_ = true;
+
+    const [_, height] = await node.chain.getLastHeight();
+    console.log(`Current height in local copy: ${height}`);
+
+    if (await comeBackAfterTheBCHHardFork(node)) {
+        console.log("Bitcoin Cash has been created!");
+    }
+
+    node.close();
+    console.log("Good bye!");
+}
+
+async function comeBackAfterTheBCHHardFork(node : kth.node.Node) {
+    const hfHeight = 478559;
+    while (running_) {
+        const [_, height] = await node.chain.getLastHeight();
+        if (height >= hfHeight) return true;
+        await sleep(10000);
+    }
+    return false;
+}
+
+function shutdown() {
+    console.log('Graceful shutdown ...');
+    running_ = false;
+}
+
+function sleep(ms : number) {
+    return new Promise((r) => setTimeout(r, ms));
+}
+
+(async () => {
+    try {
+        await main();
+    } catch (e) {
+        console.log(e);
+    }
+})();
+
+```
+
+4. Enjoy Knuth node as a Typescript library:
+
+```
+$ ts-node index.ts
 ```
 
 ## Issues
