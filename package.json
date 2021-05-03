@@ -1,6 +1,6 @@
 {
   "name": "@knuth/bch",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Bitcoin Cash development platform for Javascript and Typescript applications",
   "main": "src/kth.js",
   "scripts": {
