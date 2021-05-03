@@ -9,8 +9,8 @@ import { Transaction } from "./transaction";
 export declare class Chain {
     constructor(native : any);
 
-    getLastHeight() : Promise<[number, Header]>;
-    getBlockHeight(hash : Uint8Array) : Promise<[number, Header]>;
+    getLastHeight() : Promise<[number, number]>;
+    getBlockHeight(hash : Uint8Array) : Promise<[number, number]>;
 
     getBlockHeaderByHeight(height : number) : Promise<[number, Header, number]>;
     getBlockHeaderByHash(hash : Uint8Array) : Promise<[number, Header, number]>;
