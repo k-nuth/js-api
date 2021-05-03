@@ -7,18 +7,18 @@ import { Network } from './network';
 export interface Checkpoint {
     hash: Uint8Array;
     height: number;
-};
+}
 
 export interface Authority {
     ip: string;
     port: number;
-};
+}
 
 export interface Endpoint {
     scheme: string;
     host: string;
     port: number;
-};
+}
 
 export interface NodeSettings {
     syncPeers: number;
@@ -26,7 +26,7 @@ export interface NodeSettings {
     blockLatencySeconds: number;
     refreshTransactions: boolean;
     compactBlocksHighBandwidth: boolean;
-};
+}
 
 export interface BlockchainSettings {
     cores: number;
@@ -38,7 +38,7 @@ export interface BlockchainSettings {
     notifyLimitHours: number;
     reorganizationLimit: number;
 
-    checkpoints: [Checkpoint];
+    checkpoints: Array<Checkpoint>;
 
     fixCheckpoints: boolean;
     allowCollisions: boolean;
@@ -67,7 +67,7 @@ export interface BlockchainSettings {
     eulerActivationTime: number;
     gaussActivationTime: number;
     asertHalfLife: number;
-};
+}
 
 export interface DatabaseSettings {
     directory: string;
@@ -78,7 +78,7 @@ export interface DatabaseSettings {
     dbMaxSize: number;
     safeMode: boolean;
     cacheCapacity: number;
-};
+}
 
 export interface NetworkSettings {
     threads: number;
@@ -108,10 +108,10 @@ export interface NetworkSettings {
     hostsFile: string;
 
     self: Authority;
-    blacklist: [Authority];
+    blacklist: Array<Authority>;
 
-    peers: [Endpoint];
-    seeds: [Endpoint];
+    peers: Array<Endpoint>;
+    seeds: Array<Endpoint>;
 
     debugFile: string;
     errorFile: string;
@@ -127,21 +127,21 @@ export interface NetworkSettings {
     verbose: boolean;
     useIpv6: boolean;
 
-    userAgentBlacklist: [string];
-};
+    userAgentBlacklist: Array<string>;
+}
 
 export interface Settings {
     node: NodeSettings;
     chain: BlockchainSettings;
     database: DatabaseSettings;
     network: NetworkSettings;
-};
+}
 
 export interface SettingsResult {
     ok: boolean;
     message?: string;
     settings?: Settings;
-};
+}
 
 export declare function getDefault(network : Network): Settings;
 
