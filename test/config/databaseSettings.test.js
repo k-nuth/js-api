@@ -2,7 +2,7 @@ const databaseSettings = require('../../src/config/databaseSettings');
 const network = require('../../src/config/network');
 
 test('read default settings', () => {
-    const settings = databaseSettings.getDefault(network.network.mainnet);
+    const settings = databaseSettings.getDefault(network.Network.mainnet);
     expect(settings.directory).toBe('blockchain');
     expect(settings.flushWrites).toBe(false);
     expect(settings.fileGrowthRate).toBe(50);

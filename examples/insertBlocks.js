@@ -220,12 +220,12 @@ function sleepBusy(ms) {
 }
 
 async function main() {
-    const setts = settings.getDefault(network.network.mainnet);
+    const setts = settings.getDefault(network.Network.mainnet);
     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
 
     const n = new node.Node(setts, true);
 
-    const res = await n.launch(primitives.startModules.justChain);
+    const res = await n.launch(primitives.StartModules.justChain);
     console.log("res", res);
     await fillBlocks(n.chain);
 

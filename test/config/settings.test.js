@@ -3,7 +3,7 @@ const network = require('../../src/config/network');
 const enc = require('../../src/encoding');
 
 test('read default mainnet settings', () => {
-    const setts = settings.getDefault(network.network.mainnet);
+    const setts = settings.getDefault(network.Network.mainnet);
 
     expect(setts.chain.cores).toBe(0);
     expect(setts.chain.priority).toBe(true);
@@ -106,7 +106,7 @@ test('read default mainnet settings', () => {
 });
 
 test('read default testnet4 settings', () => {
-    const setts = settings.getDefault(network.network.testnet4);
+    const setts = settings.getDefault(network.Network.testnet4);
 
     expect(setts.chain.cores).toBe(0);
     expect(setts.chain.priority).toBe(true);

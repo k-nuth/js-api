@@ -221,12 +221,12 @@ function sleepBusy(ms) {
 
 var node_;
 beforeAll(async () => {
-    const setts = settings.getDefault(network.network.mainnet);
+    const setts = settings.getDefault(network.Network.mainnet);
     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
 
     node_ = new node.Node(setts, false);
 
-    const res = await node_.launch(primitives.startModules.justChain);
+    const res = await node_.launch(primitives.StartModules.justChain);
     expect(res).toBe(0);
     await fillBlocks(node_.chain);
 });

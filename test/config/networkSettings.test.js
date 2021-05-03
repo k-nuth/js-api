@@ -2,7 +2,7 @@ const networkSettings = require('../../src/config/networkSettings');
 const network = require('../../src/config/network');
 
 test('read default settings', () => {
-    const settings = networkSettings.getDefault(network.network.mainnet);
+    const settings = networkSettings.getDefault(network.Network.mainnet);
     expect(settings.threads).toBe(0);
     expect(settings.protocolMaximum).toBe(70015);
     expect(settings.protocolMinimum).toBe(31402);

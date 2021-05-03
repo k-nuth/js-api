@@ -3,7 +3,7 @@ const network = require('../../src/config/network');
 const enc = require('../../src/encoding');
 
 test('read default mainnet settings', () => {
-    const settings = blockchainSettings.getDefault(network.network.mainnet);
+    const settings = blockchainSettings.getDefault(network.Network.mainnet);
     expect(settings.cores).toBe(0);
     expect(settings.priority).toBe(true);
 
@@ -46,7 +46,7 @@ test('read default mainnet settings', () => {
 });
 
 test('read default testnet4 settings', () => {
-    const settings = blockchainSettings.getDefault(network.network.testnet4);
+    const settings = blockchainSettings.getDefault(network.Network.testnet4);
     expect(settings.cores).toBe(0);
     expect(settings.priority).toBe(true);
 
