@@ -34,5 +34,5 @@ module.exports = {
 
     //Config
     settings,
-    network: sett_network.network
+    network: sett_network.Network
 };
