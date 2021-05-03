@@ -9,13 +9,24 @@ const block = require('./block');
 const transaction = require('./transaction');
 
 const async_chain = {
-    fetch_last_height: Promise.promisify(kth.chain_fetch_last_height),
+    // fetch_last_height: Promise.promisify(kth.chain_fetch_last_height),
+    fetch_last_height: (...args) => {
+        return new Promise((resolve) => {
+            kth.chain_fetch_last_height(...args, (...handler_args) => {
+                resolve(handler_args);
+            });
+        });
+    },
+
     fetch_block_height: (...args) => {
         // return new Promise((resolve, reject) => {
         return new Promise((resolve) => {
-            kth.chain_fetch_block_height(...args, (err, h) => {
-                // if (err) return reject(err)
-                resolve([err, h]);
+            // kth.chain_fetch_block_height(...args, (err, h) => {
+            //     // if (err) return reject(err)
+            //     resolve([err, h]);
+            // });
+            kth.chain_fetch_block_height(...args, (...handler_args) => {
+                resolve(handler_args);
             });
         });
     },
