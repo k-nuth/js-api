@@ -389,8 +389,8 @@ function VerifyBlock170Header(header) {
 // }
 
 test('retrieves the right chain height', async () => {
-    const h = await node_.chain.getLastHeight();
-    expect(await node_.chain.getLastHeight()).toEqual(170);
+    const [_, h] = await node_.chain.getLastHeight();
+    expect(h).toEqual(170);
 });
 
 test('getBlockHeaderByHeight', async () => {

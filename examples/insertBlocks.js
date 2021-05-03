@@ -229,7 +229,7 @@ async function main() {
     console.log("res", res);
     await fillBlocks(n.chain);
 
-    const h = await n.chain.getLastHeight();
+    const [_, h] = await n.chain.getLastHeight();
     console.log("getLastHeight", h);
     // sleepBusy(5000);
 }
