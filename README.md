@@ -41,7 +41,7 @@ async function main() {
     console.log("Knuth node has been launched.");
     running_ = true;
 
-    const height = await node.chain.getLastHeight();
+    const [_, height] = await node.chain.getLastHeight();
     console.log(`Current height in local copy: ${height}`);
 
     if (await comeBackAfterTheBCHHardFork(node)) {
@@ -55,7 +55,7 @@ async function main() {
 async function comeBackAfterTheBCHHardFork(node) {
     const hfHeight = 478559;
     while (running_) {
-        const height = await node.chain.getLastHeight();
+        const [_, height] = await node.chain.getLastHeight();
         if (height >= hfHeight) return true;
         await sleep(10000);
     }
