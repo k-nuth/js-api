@@ -62,10 +62,8 @@ export interface BlockchainSettings {
     bchMersenne: boolean;
     bchFermat: boolean;
     bchEuler: boolean;
-    bchGauss: boolean;
-
-    eulerActivationTime: number;
-    gaussActivationTime: number;
+    // bchGauss: boolean;
+    // gaussActivationTime: number;
     asertHalfLife: number;
 }
 
