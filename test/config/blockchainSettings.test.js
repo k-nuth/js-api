@@ -39,7 +39,7 @@ test('read default mainnet settings', () => {
     expect(settings.bchPisano).toBe(true);
     expect(settings.bchMersenne).toBe(true);
     expect(settings.bchFermat).toBe(true);
-    expect(settings.bchEuler).toBe(false);
+    expect(settings.bchEuler).toBe(true);
     // expect(settings.bchGauss).toBe(false);
     // expect(settings.gaussActivationTime).toBe(1621080000);
     expect(settings.asertHalfLife).toBe(2 * 24 * 60 * 60); //two days
@@ -82,7 +82,7 @@ test('read default testnet4 settings', () => {
     expect(settings.bchPisano).toBe(true);
     expect(settings.bchMersenne).toBe(true);
     expect(settings.bchFermat).toBe(true);
-    expect(settings.bchEuler).toBe(false);
+    expect(settings.bchEuler).toBe(true);
     // expect(settings.bchGauss).toBe(false);
     // expect(settings.gaussActivationTime).toBe(1621080000);
     expect(settings.asertHalfLife).toBe(60 * 60); //one hour
