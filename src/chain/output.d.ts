@@ -1,9 +1,9 @@
-// Copyright (c) 2016-2021 Knuth Project developers.
+// Copyright (c) 2016-2022 Knuth Project developers.
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-import { Script } from './script'; 
-import { Result } from '../result'; 
+import { Script } from './script';
+import { Result } from '../result';
 
 export declare class Output {
   constructor(value: number, script: Script);
