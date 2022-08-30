@@ -33,13 +33,18 @@ jobs:
       - name: Generate Job Matrix
         id: set-matrix
         env:
-          MATRIX: '{"config": [{"name": "Linux (GCC11) NodeJS 16","nodejs_version": "16","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
-                          {"name": "Linux (GCC11) NodeJS 14","nodejs_version": "14","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
-                          {"name": "Linux (GCC11) NodeJS 12","nodejs_version": "12","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
-                          {"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
+          MATRIX: '{"config": [{"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
                           {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-12","os_kind": "macos","test": "0"},
                           {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-12","os_kind": "macos","test": "0"},
                           ]}'
+
+          # MATRIX: '{"config": [{"name": "Linux (GCC11) NodeJS 16","nodejs_version": "16","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
+          #                 {"name": "Linux (GCC11) NodeJS 14","nodejs_version": "14","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
+          #                 {"name": "Linux (GCC11) NodeJS 12","nodejs_version": "12","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
+          #                 {"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
+          #                 {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-12","os_kind": "macos","test": "0"},
+          #                 {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-12","os_kind": "macos","test": "0"},
+          #                 ]}'
 
           # MATRIX: '{"config": [{"name": "Linux NodeJS 16","nodejs_version": "16","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
           #                 {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
