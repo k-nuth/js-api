@@ -12,7 +12,7 @@ test('read default mainnet settings', () => {
     expect(setts.chain.minimumOutputSatoshis).toBe(500);
     expect(setts.chain.notifyLimitHours).toBe(24);
     expect(setts.chain.reorganizationLimit).toBe(256);
-    expect(setts.chain.checkpoints.length).toBe(64);
+    expect(setts.chain.checkpoints.length).toBe(76);
     expect(setts.chain.checkpoints[0].height).toBe(0);
     expect(enc.Hash.bytesToStr(setts.chain.checkpoints[0].hash)).toBe(
         '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
@@ -39,9 +39,10 @@ test('read default mainnet settings', () => {
     expect(setts.chain.bchFermat).toBe(true);
     expect(setts.chain.bchEuler).toBe(true);
     expect(setts.chain.bchGauss).toBe(true);
-    // expect(setts.chain.bchDescartes).toBe(true);
-    expect(setts.chain.descartesActivationTime).toBe(1684152000);
+    expect(setts.chain.bchDescartes).toBe(true);
+
     expect(setts.chain.lobachevskiActivationTime).toBe(1715774400);
+    expect(setts.chain.galoisActivationTime).toBe(1747310400);
 
     expect(setts.chain.asertHalfLife).toBe(2 * 24 * 60 * 60); //two days
     // ------------------------------------------------------------------------------------
@@ -145,9 +146,11 @@ test('read default testnet4 settings', () => {
     expect(setts.chain.bchFermat).toBe(true);
     expect(setts.chain.bchEuler).toBe(true);
     expect(setts.chain.bchGauss).toBe(true);
-    // expect(setts.chain.chain.bchDescartes).toBe(true);
-    expect(setts.chain.descartesActivationTime).toBe(1684152000);
+    expect(setts.chain.bchDescartes).toBe(true);
+
     expect(setts.chain.lobachevskiActivationTime).toBe(1715774400);
+    expect(setts.chain.galoisActivationTime).toBe(1747310400);
+
     expect(setts.chain.asertHalfLife).toBe(60 * 60); // one hour
     // ------------------------------------------------------------------------------------
     expect(setts.database.directory).toBe('blockchain');
