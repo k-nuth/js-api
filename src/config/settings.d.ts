@@ -57,14 +57,16 @@ export interface BlockchainSettings {
     bchDaaCw144: boolean;
     bchPythagoras: boolean;
     bchEuclid: boolean;
-
     bchPisano: boolean;
     bchMersenne: boolean;
     bchFermat: boolean;
     bchEuler: boolean;
-    // bchGauss: boolean;
-    gaussActivationTime: number;
-    descartesActivationTime: number;
+    bchGauss: boolean;
+    bchDescartes: boolean;
+
+    lobachevskiActivationTime: number;
+    galoisActivationTime: number;
+
     asertHalfLife: number;
 }
 
