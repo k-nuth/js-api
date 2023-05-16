@@ -2,3 +2,4 @@ node_modules/
 blockchain/
 debug.log
 error.log
+.DS_Store
