@@ -15,8 +15,10 @@ jobs:
     name: Execute ESLint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
     - name: Install modules
       run: npm install
     # - name: Run ESLint
@@ -68,8 +70,8 @@ jobs:
       matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
     name: ${{ matrix.config.name }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.config.nodejs_version }}
       - uses: actions/setup-python@v1
@@ -108,10 +110,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Public NPM
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm publish --access public
@@ -121,11 +123,11 @@ jobs:
   # publish:
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v2
+  #   - uses: actions/checkout@v3
   #   # Setup .npmrc file to publish to npm
-  #   - uses: actions/setup-node@v2
+  #   - uses: actions/setup-node@v3
   #     with:
-  #       node-version: 14
+  #       node-version: 16
   #       registry-url: 'https://registry.npmjs.org'
   #   - run: npm install
   #   # Publish to npm
@@ -133,7 +135,7 @@ jobs:
   #     env:
   #       NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   #   # Setup .npmrc file to publish to GitHub Packages
-  #   - uses: actions/setup-node@v2
+  #   - uses: actions/setup-node@v3
   #     with:
   #       registry-url: 'https://npm.pkg.github.com'
   #       # Defaults to the user or organization that owns the workflow file
@@ -148,10 +150,10 @@ jobs:
   #   runs-on: ubuntu-latest
   #   name: Public NPM
   #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
   #       with:
-  #         node-version: 14
+  #         node-version: 16
   #     - run: npm install
   #     - run: npm test
   #     # - run: npm ci
@@ -165,10 +167,10 @@ jobs:
   #   runs-on: ubuntu-latest
   #   name: Public GPR
   #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
   #       with:
-  #         node-version: 14
+  #         node-version: 16
   #     - run: npm install
   #     # - run: npm test
   #     # - run: npm ci
@@ -182,10 +184,10 @@ jobs:
   #   runs-on: ubuntu-latest
   #   name: Public NPM
   #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
   #       with:
-  #         node-version: 14
+  #         node-version: 16
   #         registry-url: https://registry.npmjs.org/
   #     - run: npm ci
   #     - run: npm publish
@@ -198,10 +200,10 @@ jobs:
   #   runs-on: ubuntu-latest
   #   name: Public GPR
   #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
   #       with:
-  #         node-version: 14
+  #         node-version: 16
   #         registry-url: https://npm.pkg.github.com/
   #     # - run: npm login
   #     # - run: npm ci
