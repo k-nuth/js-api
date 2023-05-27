@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Height Counter</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            width: 30rem;
+        }
+
+        .card img {
+            height: 15rem;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="card text-center">
+        <img src="bitcoin.jpg" class="card-img-top" alt="Bitcoin">
+        <div class="card-body">
+            <h5 class="card-title">Latest Synchronized Block Height</h5>
+            <p class="card-text">The current block height is: <span id="block-height">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        const source = new EventSource("/sse-endpoint");
+        const blockHeightSpan = document.getElementById("block-height");
+
+        source.addEventListener("blockheight", function(event) {
+            blockHeightSpan.textContent = event.data;
+        }, false);
+    </script>
+</body>
+</html>
