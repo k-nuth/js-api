@@ -95,3 +95,50 @@ test('read default testnet4 settings', () => {
 
     expect(settings.asertHalfLife).toBe(60 * 60); //one hour
 });
+
+test('read default chipnet settings', () => {
+    const settings = blockchainSettings.getDefault(network.Network.chipnet);
+    expect(settings.cores).toBe(0);
+    expect(settings.priority).toBe(true);
+
+    expect(settings.byteFeeSatoshis).toBeCloseTo(0.1);
+    expect(settings.sigopFeeSatoshis).toBe(100.0);
+    expect(settings.minimumOutputSatoshis).toBe(500);
+    expect(settings.notifyLimitHours).toBe(24);
+    expect(settings.reorganizationLimit).toBe(256);
+
+    expect(settings.checkpoints.length).toBe(18);
+    expect(settings.checkpoints[0].height).toBe(0);
+    expect(enc.Hash.bytesToStr(settings.checkpoints[0].hash)).toBe(
+        '000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b'
+    );
+
+    expect(settings.fixCheckpoints).toBe(true);
+    expect(settings.allowCollisions).toBe(true);
+    expect(settings.easyBlocks).toBe(true);
+    expect(settings.retarget).toBe(true);
+    expect(settings.bip16).toBe(true);
+    expect(settings.bip30).toBe(true);
+    expect(settings.bip34).toBe(true);
+    expect(settings.bip66).toBe(true);
+    expect(settings.bip65).toBe(true);
+    expect(settings.bip90).toBe(true);
+    expect(settings.bip68).toBe(true);
+    expect(settings.bip112).toBe(true);
+    expect(settings.bip113).toBe(true);
+    expect(settings.bchUahf).toBe(true);
+    expect(settings.bchDaaCw144).toBe(true);
+    expect(settings.bchPythagoras).toBe(true);
+    expect(settings.bchEuclid).toBe(true);
+    expect(settings.bchPisano).toBe(true);
+    expect(settings.bchMersenne).toBe(true);
+    expect(settings.bchFermat).toBe(true);
+    expect(settings.bchEuler).toBe(true);
+    expect(settings.bchGauss).toBe(true);
+    expect(settings.bchDescartes).toBe(true);
+
+    expect(settings.lobachevskiActivationTime).toBe(1715774400);
+    expect(settings.galoisActivationTime).toBe(1747310400);
+
+    expect(settings.asertHalfLife).toBe(60 * 60); //one hour
+});
