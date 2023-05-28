@@ -17,10 +17,13 @@ const transaction = require('./chain/transaction');
 
 const settings = require('./config/settings');
 const sett_network = require('./config/network');
+const err = require('../src/errors');
 
 module.exports = {
     node,
     enc,
+    errors: err.errors,
+
     startModules: primitives.StartModules,
 
     //Chain
