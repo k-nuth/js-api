@@ -7,7 +7,8 @@ const Network = Object.freeze({
     testnet: 1,
     regtest: 2,
     testnet4: 3,
-    scalenet: 4
+    scalenet: 4,
+    chipnet: 5,
 });
 
 exports.Network = Network;

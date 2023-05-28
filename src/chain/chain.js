@@ -7,6 +7,7 @@ const Promise = require('bluebird');
 const header = require('./header');
 const block = require('./block');
 const transaction = require('./transaction');
+const blockList = require('./blockList');
 
 const async_chain = {
     // fetch_last_height: Promise.promisify(kth.chain_fetch_last_height),
@@ -94,12 +95,18 @@ const async_chain = {
                 resolve(err);
             });
         });
-    }
+    },
+
+    // Subscribers
+    subscribe_blockchain: (...args) => {
+        kth.chain_subscribe_blockchain(...args);
+    },
 };
 
 class Chain {
-    constructor(native) {
+    constructor(native, nodeNative) {
         this.native = native;
+        this.nodeNative = nodeNative;
     }
 
     async getLastHeight() {
@@ -151,6 +158,18 @@ class Chain {
     async organizeTransaction(transaction) {
         const res = await async_chain.organize_transaction(this.native, transaction.toNative());
         return res;
+    }
+
+    subscribeBlockchain(callback) {
+        async_chain.subscribe_blockchain(this.nodeNative, this.native, (error, height, incomingBlocks, outgoingBlocks) => {
+            if (incomingBlocks !== null) {
+                incomingBlocks = blockList.fromNative(incomingBlocks);
+            }
+            if (outgoingBlocks !== null) {
+                outgoingBlocks = blockList.fromNative(outgoingBlocks);
+            }
+            return callback(error, height, incomingBlocks, outgoingBlocks);
+        });
     }
 
     //TODO(fernando): Merkle Block

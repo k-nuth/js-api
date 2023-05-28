@@ -23,7 +23,7 @@ class Node {
 
     get chain() {
         if (!this.native) return undefined;
-        const res = new chain.Chain(kth.node_get_chain(this.native));
+        const res = new chain.Chain(kth.node_get_chain(this.native), this.native);
         return res;
     }
 
