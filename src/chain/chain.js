@@ -107,6 +107,8 @@ class Chain {
     constructor(native, nodeNative) {
         this.native = native;
         this.nodeNative = nodeNative;
+        this.blockchainSubscribers = [];
+        this.blockAlreadySubscribed = false;
     }
 
     async getLastHeight() {
@@ -161,14 +163,30 @@ class Chain {
     }
 
     subscribeBlockchain(callback) {
+        this.blockchainSubscribers.push(callback);
+        if (this.blockAlreadySubscribed) {
+            return;
+        }
+        this.blockAlreadySubscribed = true;
+
         async_chain.subscribe_blockchain(this.nodeNative, this.native, (error, height, incomingBlocks, outgoingBlocks) => {
             if (incomingBlocks !== null) {
                 incomingBlocks = blockList.fromNative(incomingBlocks);
+            } else {
+                incomingBlocks = [];
             }
             if (outgoingBlocks !== null) {
                 outgoingBlocks = blockList.fromNative(outgoingBlocks);
+            } else {
+                outgoingBlocks = [];
             }
-            return callback(error, height, incomingBlocks, outgoingBlocks);
+
+            for (const subscriber of [...this.blockchainSubscribers]) {
+                if ( ! subscriber(error, height, incomingBlocks, outgoingBlocks)) {
+                    this.blockchainSubscribers = this.blockchainSubscribers.filter(s => s !== subscriber);
+                }
+            }
+            return true;
         });
     }
 

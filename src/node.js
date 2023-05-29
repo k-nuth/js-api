@@ -19,12 +19,15 @@ const async_node = {
 class Node {
     constructor(settings, stdoutEnabled) {
         this.native = kth.node_construct(settings, stdoutEnabled);
+        this.chain_ = null;
     }
 
     get chain() {
-        if (!this.native) return undefined;
-        const res = new chain.Chain(kth.node_get_chain(this.native), this.native);
-        return res;
+        if ( ! this.native) return undefined;
+        if ( ! this.chain_) {
+            this.chain_ = new chain.Chain(kth.node_get_chain(this.native), this.native);
+        }
+        return this.chain_;
     }
 
     close() {
