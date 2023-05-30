@@ -60,7 +60,8 @@ jobs:
           #                 ]}'
         run: |
           echo "${MATRIX}"
-          echo "::set-output name=matrix::${MATRIX}"
+          # echo "::set-output name=matrix::${MATRIX}"
+          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
 
   builds:
     needs: generate-matrix
@@ -74,9 +75,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.config.nodejs_version }}
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.11"
 
       # - name: Settting EnvVars (Unix)
       #   if: ${{ matrix.config.os_kind != 'windows' }}
