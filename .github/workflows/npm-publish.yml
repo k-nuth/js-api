@@ -35,10 +35,13 @@ jobs:
       - name: Generate Job Matrix
         id: set-matrix
         env:
-          MATRIX: '{"config": [{"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
+          MATRIX: '{"config": [
+                          {"name": "macOS NodeJS 18","nodejs_version": "18","os": "macos-12","os_kind": "macos","test": "0"},
+                          {"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
                           {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-12","os_kind": "macos","test": "0"},
-                          {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-12","os_kind": "macos","test": "0"},
                           ]}'
+
+                          # {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-12","os_kind": "macos","test": "0"},
 
           # MATRIX: '{"config": [{"name": "Linux (GCC11) NodeJS 16","nodejs_version": "16","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
           #                 {"name": "Linux (GCC11) NodeJS 14","nodejs_version": "14","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
@@ -77,7 +80,7 @@ jobs:
           node-version: ${{ matrix.config.nodejs_version }}
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.9"
 
       # - name: Settting EnvVars (Unix)
       #   if: ${{ matrix.config.os_kind != 'windows' }}
