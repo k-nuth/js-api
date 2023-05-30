@@ -77,4 +77,5 @@ const destruct = (native) => {
 exports.fromNative = fromNative;
 exports.fromData = fromData;
 exports.destruct = destruct;
+exports.hash = hash;
 exports.Block = Block;
