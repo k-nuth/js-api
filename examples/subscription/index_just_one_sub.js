@@ -13,10 +13,6 @@ app.use(express.static(path.join(__dirname, '.')));
 let running_ = false;
 let lastBlockHeight = 0; // to store last block height
 
-const config = kth.settings.getDefault(kth.network.chipnet);
-const node = new kth.node.Node(config, true);
-
-
 function sleep(ms) {
     return new Promise((r) => setTimeout(r, ms));
 }
@@ -28,32 +24,17 @@ app.get('/sse-endpoint', (req, res) => {
     res.flushHeaders();
 
     res.write(`event: blockheight\ndata: ${lastBlockHeight}\n\n`);
+    let lastSentHeight = lastBlockHeight;
 
-    let connected = true;
-
-    node.chain.subscribeBlockchain((e, height, incomingBlocks, outgoingBlocks) => {
-        // console.log("subscribeBlockchain: ", e, height);
-        if (e !== kth.errors.success) {
-            console.log(`Error: ${e}`);
-            return false;
-        }
-
-        if ( ! running_) {
-            console.log("Not running, returning false");
-            return false;
-        }
-
-        if (incomingBlocks.length > 0) {
-            lastBlockHeight = height + incomingBlocks.length;
-            console.log(`${new Date().toISOString()} - Received new block. Height: ${lastBlockHeight}`);
+    const intervalId = setInterval(() => {
+        if (lastSentHeight !== lastBlockHeight) {
             res.write(`event: blockheight\ndata: ${lastBlockHeight}\n\n`);
+            lastSentHeight = lastBlockHeight;
         }
-
-        return connected;
-    });
+    }, 500);
 
     req.on('close', () => {
-        connected = false;
+        clearInterval(intervalId);
         res.end();
     });
 });
@@ -64,12 +45,35 @@ const server = app.listen(3000, () => {
 
 async function main() {
     process.on('SIGINT', shutdown);
+    const config = kth.settings.getDefault(kth.network.chipnet);
+    const node = new kth.node.Node(config, true);
     await node.launch(kth.startModules.all);
     console.log("Knuth node has been launched.");
     running_ = true;
 
     const [_, height] = await node.chain.getLastHeight();
     lastBlockHeight = height;
+
+    node.chain.subscribeBlockchain((e, height, incomingBlocks, outgoingBlocks) => {
+        // console.log("subscribeBlockchain: ", e, height, incomingBlocks, outgoingBlocks);
+        if (e !== kth.errors.success) {
+            console.log(`Error: ${e}`);
+            return false;
+        }
+
+        if ( ! running_) {
+            console.log("Not running, returning false");
+            return false;
+        }
+
+        if (incomingBlocks && incomingBlocks.length > 0) {
+            lastBlockHeight = height + incomingBlocks.length;
+            console.log(`${new Date().toISOString()} - Received new block. Height: ${lastBlockHeight}`);
+        }
+
+        // console.log("returning true");
+        return true;
+    });
 
     while (running_) {
         // console.log("sleeping...")

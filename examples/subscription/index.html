@@ -24,7 +24,7 @@
 
         .card img {
             width: 100%;
-            height: 30rem;  /* 50% smaller height */
+            /* height: 30rem;  50% smaller height */
             object-fit: cover;
         }
 
@@ -42,9 +42,12 @@
     <script>
         const source = new EventSource("/sse-endpoint");
         const blockHeightSpan = document.getElementById("block-height");
+        const audio = new Audio('https://www.soundjay.com/nature/water-droplet-1.mp3');
 
         source.addEventListener("blockheight", function(event) {
+            console.log("blockheight event: ", event.data);
             blockHeightSpan.textContent = event.data;
+            audio.play();
         }, false);
     </script>
 </body>
