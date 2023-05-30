@@ -27,14 +27,9 @@ async function main() {
             return false;
         }
 
-        if ( ! incomingBlocks && ! outgoingBlocks) {
-            return true;
-        }
 
-        console.log("height: ", height);
-
-        if (incomingBlocks && incomingBlocks.length > 0) {
-            console.log("incomingBlocks: ", incomingBlocks);
+        if (incomingBlocks.length > 0) {
+            console.log("new tip height: ", height + incomingBlocks.length);
         }
 
         if (outgoingBlocks && outgoingBlocks.length > 0) {
@@ -45,12 +40,6 @@ async function main() {
     });
 
     while (running_) {
-        // const [_, height] = await node.chain.getLastHeight();
-        // console.log(`Current height in local copy: ${height}`);
-
-        // if (height >= 149836) {
-        //     break;
-        // }
 
         await sleep(1000);
     }
