@@ -482,6 +482,18 @@ test('OrganizeTransaction', async () => {
 });
 
 
+test('node information', async () => {
+    expect(node_.capi_version).toEqual("0.36.0");
+    expect(node_.cppapi_version).toEqual("0.35.0");
+    expect(node_.version).toEqual("1.21.0");
+    expect(node_.microarchitecture).toEqual("ZLm9Pjh");
+    expect(node_.march_names).toEqual("64 bits, CMOV, CX8, FPU, FXSR, MMX, SCE, SSE, SSE2, CX16, LAHF-SAHF, POPCNT, SSE3, SSE4.1, SSE4.2, SSSE3, AVX, AVX2, BMI1, BMI2, F16C, FMA, LZCNT ABM, MOVBE, XSAVE");
+    expect(node_.currency_symbol).toEqual("BCH");
+    expect(node_.currency).toEqual("Bitcoin Cash");
+    expect(node_.db_type).toEqual("full-indexed");
+});
+
+
 //TODO(fernando): implement
 // test('getSpend', async () => {
 //     const hash = enc.Hash.strToBytes("0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9");
