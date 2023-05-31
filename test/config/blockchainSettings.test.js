@@ -107,7 +107,7 @@ test('read default chipnet settings', () => {
     expect(settings.notifyLimitHours).toBe(24);
     expect(settings.reorganizationLimit).toBe(256);
 
-    expect(settings.checkpoints.length).toBe(18);
+    expect(settings.checkpoints.length).toBe(12);
     expect(settings.checkpoints[0].height).toBe(0);
     expect(enc.Hash.bytesToStr(settings.checkpoints[0].hash)).toBe(
         '000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b'

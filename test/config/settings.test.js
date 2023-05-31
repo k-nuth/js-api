@@ -226,7 +226,7 @@ test('read default chipnet settings', () => {
     expect(setts.chain.minimumOutputSatoshis).toBe(500);
     expect(setts.chain.notifyLimitHours).toBe(24);
     expect(setts.chain.reorganizationLimit).toBe(256);
-    expect(setts.chain.checkpoints.length).toBe(18);
+    expect(setts.chain.checkpoints.length).toBe(12);
     expect(setts.chain.checkpoints[0].height).toBe(0);
     expect(enc.Hash.bytesToStr(setts.chain.checkpoints[0].hash)).toBe(
         '000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b'
@@ -277,7 +277,7 @@ test('read default chipnet settings', () => {
     expect(setts.network.relayTransactions).toBe(true);
     expect(setts.network.validateChecksum).toBe(false);
     expect(setts.network.identifier).toBe(2950346722);
-    expect(setts.network.inboundPort).toBe(28333);
+    expect(setts.network.inboundPort).toBe(48333);
     expect(setts.network.inboundConnections).toBe(0);
     expect(setts.network.outboundConnections).toBe(8);
     expect(setts.network.manualAttemptLimit).toBe(0);
@@ -294,10 +294,10 @@ test('read default chipnet settings', () => {
     expect(setts.network.self.port).toBe(0);
     expect(setts.network.blacklist.length).toBe(0);
     expect(setts.network.peers.length).toBe(0);
-    expect(setts.network.seeds.length).toBe(3);
+    expect(setts.network.seeds.length).toBe(1);
     expect(setts.network.seeds[0].scheme).toBe('');
-    expect(setts.network.seeds[0].host).toBe('chipnet-seed-bch.bitcoinforks.org');
-    expect(setts.network.seeds[0].port).toBe(28333);
+    expect(setts.network.seeds[0].host).toBe('chipnet.bitjson.com');
+    expect(setts.network.seeds[0].port).toBe(48333);
     expect(setts.network.debugFile).toBe('debug.log');
     expect(setts.network.errorFile).toBe('error.log');
     expect(setts.network.archiveDirectory).toBe('archive');

@@ -40,6 +40,38 @@ class Node {
         const res = await async_node.init_run_and_wait_for_signal(this.native, mods);
         return res;
     }
+
+    get capi_version() {
+        return kth.node_capi_version();
+    }
+
+    get cppapi_version() {
+        return kth.node_cppapi_version();
+    }
+
+    get version() {
+        return process.env.npm_package_version;
+    }
+
+    get microarchitecture() {
+        return kth.node_microarchitecture();
+    }
+
+    get march_names() {
+        return kth.node_march_names();
+    }
+
+    get currency_symbol() {
+        return kth.node_currency_symbol();
+    }
+
+    get currency() {
+        return kth.node_currency();
+    }
+
+    get db_type() {
+        return kth.node_db_type();
+    }
 }
 
 exports.Node = Node;
