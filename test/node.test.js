@@ -4,21 +4,319 @@
 
 /* eslint-disable */
 
-// const block = require('../src/chain/block');
-// const enc = require('../src/encoding');
-// const err = require('../src/errors');
-// const node = require('../src/node');
-// const network = require('../src/config/network');
-// const settings = require('../src/config/settings');
-// const primitives = require('../src/primitives');
-
 const kth = require('../src/kth');
 
 const FIRST_NON_COINBASE_BLOCK_HEIGHT = 170;
 
+describe('full indexed node tests', () => {
+    let node_;
+    beforeAll(async () => {
+        const setts = kth.settings.getDefault(kth.network.mainnet);
+        setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
+        setts.database.dbMode = kth.dbMode.fullIndexed;
+        setts.database.directory = "blockchain-full-indexed";
+        node_ = new kth.node.Node(setts, false);
+        const res = await node_.launch(kth.startModules.justChain);
+        expect(res).toBe(0);
+        await fillBlocks(node_.chain);
+    });
+
+    afterAll(() => {
+        sleepBusy(1000);
+        node_.close();
+        node_ = null;
+    });
+
+    it('retrieves the right chain height', async () => {
+        const [_, h] = await node_.chain.getLastHeight();
+        expect(h).toEqual(170);
+    });
+
+    it('getBlockHeaderByHeight', async () => {
+        const ret = await node_.chain.getBlockHeaderByHeight(0);
+        expect(ret[0]).toEqual(kth.errors.success);
+        expect(ret[2]).toEqual(0);
+        verifyGenesisBlockHeader(ret[1]);
+    });
+
+    it('getBlockHeaderByHash', async () => {
+        const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+        const ret = await node_.chain.getBlockHeaderByHash(hash);
+        expect(ret[0]).toEqual(kth.errors.success);
+        verifyGenesisBlockHeader(ret[1]);
+    });
+
+    it('getBlockByHeight', async () => {
+        const ret = await node_.chain.getBlockByHeight(0);
+        expect(ret[0]).toEqual(kth.errors.success);
+        verifyGenesisBlockHeader(ret[1].header);
+    });
+
+    it('getBlockByHash', async () => {
+        const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+        const ret = await node_.chain.getBlockByHash(hash);
+        expect(ret[0]).toEqual(kth.errors.success);
+        verifyGenesisBlockHeader(ret[1].header);
+    });
+
+    it('getBlockHeight', async () => {
+        const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+        const ret = await node_.chain.getBlockHeight(hash);
+        expect(ret[0]).toEqual(kth.errors.success);
+        expect(ret[1]).toEqual(0);
+    });
+
+    it('getTransactionGenesis', async () => {
+        const txHashHexStr = "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b";
+        const hash = kth.enc.Hash.strToBytes(txHashHexStr);
+        const ret = await node_.chain.getTransaction(hash, true);
+        expect(ret[0]).toEqual(kth.errors.success);
+        const tx = ret[1];
+        expect(ret[2]).toEqual(0);         // index of the Tx inside the Block
+        expect(ret[3]).toEqual(0);         // block height
+    });
+
+    it('getTransaction', async () => {
+        const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
+        const hash = kth.enc.Hash.strToBytes(txHashHexStr);
+        const ret = await node_.chain.getTransaction(hash, true);
+        const tx = ret[1];
+        expect(ret[0]).toEqual(kth.errors.success);
+        expect(ret[2]).toEqual(1);
+        expect(ret[3]).toEqual(FIRST_NON_COINBASE_BLOCK_HEIGHT);
+        checkFirstNonCoinbaseTxFromHeight170(tx, txHashHexStr);
+    });
+
+    it('GetTransactionPosition', async () => {
+        const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
+        const hash = kth.enc.Hash.strToBytes(txHashHexStr);
+        const ret = await node_.chain.getTransactionPosition(hash, true);
+        expect(ret[0]).toEqual(kth.errors.success);
+        expect(ret[1]).toEqual(1);
+        expect(ret[2]).toEqual(FIRST_NON_COINBASE_BLOCK_HEIGHT);
+    });
+
+    it('getBlockByHash170', async () => {
+        const hash = kth.enc.Hash.strToBytes("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
+        const ret = await node_.chain.getBlockByHash(hash);
+        expect(ret[0]).toEqual(kth.errors.success);
+        VerifyBlock170Header(ret[1].header);
+    });
+
+    // it('organizeBlock', async () => {
+    //     const ret = await node_.chain.getBlockByHeight(0);
+    //     expect(ret[0]).toEqual(kth.errors.success);
+    //     const block = ret[1];
+    //     const retOrg = await node_.chain.organizeBlock(block);
+    //     expect(retOrg).toEqual(kth.errors.duplicateBlock);
+    // });
+
+    it('OrganizeTransaction', async () => {
+        const ret = await node_.chain.getBlockByHeight(0);
+        expect(ret[0]).toEqual(kth.errors.success);
+        const block = ret[1];
+        const tx = block.transactions[0];
+        const retOrg = await node_.chain.organizeTransaction(tx);
+        expect(retOrg).toEqual(kth.errors.coinbaseTransaction);
+    });
+
+
+    it('node information', async () => {
+        expect(node_.capi_version).toEqual("0.39.0");
+        expect(node_.cppapi_version).toEqual("0.38.0");
+        expect(node_.version).toEqual("1.23.0");
+        expect(node_.microarchitecture).toEqual("ZLm9Pjh");
+        expect(node_.march_names).toEqual("64 bits, CMOV, CX8, FPU, FXSR, MMX, SCE, SSE, SSE2, CX16, LAHF-SAHF, POPCNT, SSE3, SSE4.1, SSE4.2, SSSE3, AVX, AVX2, BMI1, BMI2, F16C, FMA, LZCNT ABM, MOVBE, XSAVE");
+        expect(node_.currency_symbol).toEqual("BCH");
+        expect(node_.currency).toEqual("Bitcoin Cash");
+        // expect(node_.js_native_version).toEqual("0.54.0");
+    });
+});
+
+// describe('pruned node tests', () => {
+//     let node_;
+//     beforeAll(async () => {
+//         const setts = kth.settings.getDefault(kth.network.mainnet);
+//         setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
+//         setts.database.dbMode = kth.dbMode.pruned;
+//         setts.database.directory = "blockchain-pruned";
+//         node_ = new kth.node.Node(setts, false);
+//         const res = await node_.launch(kth.startModules.justChain);
+//         expect(res).toBe(0);
+//         await fillBlocks(node_.chain);
+//     });
+
+//     afterAll(() => {
+//         sleepBusy(3000);
+//         node_.close();
+//     });
+
+//     it('retrieves the right chain height', async () => {
+//         const [_, h] = await node_.chain.getLastHeight();
+//         expect(h).toEqual(170);
+//     });
+
+//     it('getBlockHeaderByHeight', async () => {
+//         const ret = await node_.chain.getBlockHeaderByHeight(0);
+//         expect(ret[0]).toEqual(kth.errors.success);
+//         expect(ret[2]).toEqual(0);
+//         verifyGenesisBlockHeader(ret[1]);
+//     });
+
+//     it('getBlockHeaderByHash', async () => {
+//         const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+//         const ret = await node_.chain.getBlockHeaderByHash(hash);
+//         expect(ret[0]).toEqual(kth.errors.success);
+//         verifyGenesisBlockHeader(ret[1]);
+//     });
+
+//     it('getBlockByHeight', async () => {
+//         const ret = await node_.chain.getBlockByHeight(0);
+//         expect(ret[0]).toEqual(kth.errors.notFound);
+//     });
+
+//     it('getBlockByHash', async () => {
+//         const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+//         const ret = await node_.chain.getBlockByHash(hash);
+//         expect(ret[0]).toEqual(kth.errors.notFound);
+//     });
+
+//     it('getBlockHeight', async () => {
+//         const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+//         const ret = await node_.chain.getBlockHeight(hash);
+//         expect(ret[0]).toEqual(kth.errors.success);
+//         expect(ret[1]).toEqual(0);
+//     });
+
+//     it('getTransactionGenesis', async () => {
+//         const txHashHexStr = "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b";
+//         const hash = kth.enc.Hash.strToBytes(txHashHexStr);
+//         const ret = await node_.chain.getTransaction(hash, true);
+//         expect(ret[0]).toEqual(kth.errors.notFound);
+//     });
+
+//     it('getTransaction', async () => {
+//         const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
+//         const hash = kth.enc.Hash.strToBytes(txHashHexStr);
+//         const ret = await node_.chain.getTransaction(hash, true);
+//         expect(ret[0]).toEqual(kth.errors.notFound);
+//     });
+
+//     it('GetTransactionPosition', async () => {
+//         const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
+//         const hash = kth.enc.Hash.strToBytes(txHashHexStr);
+//         const ret = await node_.chain.getTransactionPosition(hash, true);
+//         expect(ret[0]).toEqual(kth.errors.notFound);
+//     });
+
+//     it('getBlockByHash170', async () => {
+//         const hash = kth.enc.Hash.strToBytes("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
+//         const ret = await node_.chain.getBlockByHash(hash);
+//         expect(ret[0]).toEqual(kth.errors.notFound);
+//     });
+// });
+
+
+
+
+
+
+
+
+// //TODO(fernando): implement
+// // test('getSpend', async () => {
+// //     const hash = kth.enc.Hash.strToBytes("0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9");
+// //     const outputPoint = new OutputPoint(hash, 0);
+// //     const ret = await node_.chain.GetSpend(outputPoint);
+
+// //     expect(ret.ErrorCode, ErrorCode.Success);
+// //     // expect().not.toBeNull(ret.Result);
+// //     expect(kth.enc.Hash.bytesToStr(ret.Result.Hash)).toEqual("f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16");
+// //     expect(ret.Result.Index).toEqual(0);
+// // });
+
+
+// //TODO(fernando): implement
+// // test('GetMerkleBlockByHash', async () => {
+// //     const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+// //     const ret = await node_.chain.GetMerkleBlockByHash(hash)) {
+// //         expect(ret[0]).toEqual(kth.errors.success);
+// //         expect().not.toBeNull(ret[0]);
+// //         expect(0).toEqual(ret.Result.BlockHeight);
+// //         expect(1).toEqual(ret[0].TotalTransactionCount);
+// //         verifyGenesisBlockHeader(ret[0].Header);
+// //     }
+// // });
+
+
+// //TODO(fernando): implement
+// // test('GetMerkleBlockByHeight', async () => {
+// //     //https://blockchain.info/es/block-height/0
+// //     const ret = await node_.chain.GetMerkleBlockByHeight(0)) {
+// //         expect(ret[0]).toEqual(kth.errors.success);
+// //         expect().not.toBeNull(ret[0]);
+// //         expect(0).toEqual(ret.Result.BlockHeight);
+// //         expect(1).toEqual(ret[0].TotalTransactionCount);
+// //         verifyGenesisBlockHeader(ret[0].Header);
+// //     }
+// // });
+
+// //TODO(fernando): implement
+// // test('GetBlockHeaderByHashTxSizes', async () => {
+// //     const hash = kth.enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+// //     const ret = await node_.chain.getBlockHeaderByHashTxSizes(hash);
+// //     console.log(ret);
+// //     expect(ret[0]).toEqual(kth.errors.success);
+// //     verifyGenesisBlockHeader(ret.Result.Header.BlockData);
+// // });
+
+// //TODO(fernando): implement
+// // test('getBlockByHeightHashTimestamp', async () => {
+// //     const ret = await node_.chain.getBlockByHeightHashTimestamp(0);
+// //     expect(ret[0]).toEqual(kth.errors.success);
+// //     expect("2009-01-03 18:15:05").toEqual(ret.Result.BlockTimestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+// // }
+
+// //TODO(fernando): implement
+// // test('GetHistory', async () => {
+// //     const address = new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7")) {
+// //         const ret = await node_.chain.GetHistory(address,10,1))
+// //         {
+// //             foreach (const x in ret.Result) {
+
+// //             }
+// //             expect().toBeTruthy(ret.Result.length >= 0);
+// //         }
+// //     }
+// // }
+
+// //TODO(fernando): implement
+// // test('GetConfirmedTransactions', async () => {
+// //     const address = new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7"))
+// //     const ret = await node_.chain.GetConfirmedTransactions(address,10,1)) {
+// //         expect().toBeTruthy(ret.Result.length >= 0);
+// //     }
+// // }
+
+// //TODO(fernando): implement
+// // test('ValidateTransaction', async () => {
+// //     const block = await node_.chain.getBlockByHeight(0)) {
+// //         const ret = await node_.chain.ValidateTransaction((Transaction)block.Result.BlockData.GetNthTransaction(0));
+// //         expect().toBeTruthy(ret.ErrorCode == ErrorCode.CoinbaseTransaction);
+// //     }
+// // }
+
+// //TODO(fernando): implement
+// // public void IsStale', async () => {
+// //     const ret = node_.chain.IsStale;
+// //     expect().toBeTruthy(ret);
+// // }
+
+
+
 async function pushBlock(chain, hexStr) {
-    const bytes = enc.hexStrToBytes(hexStr);
-    const result = block.fromData(1, bytes);
+    const bytes = kth.enc.hexStrToBytes(hexStr);
+    const result = kth.block.fromData(1, bytes);
 
     if ( ! result.ok) {
         throw "Invalid block";
@@ -27,7 +325,7 @@ async function pushBlock(chain, hexStr) {
 }
 
 async function fillBlocks(chain) {
-    const hash = enc.Hash.strToBytes('00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee')
+    const hash = kth.enc.Hash.strToBytes('00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee')
     const ret = await chain.getBlockHeight(hash);
     if (ret[1] == 170) {
         return;
@@ -221,37 +519,12 @@ function sleepBusy(ms) {
     while(new Date().getTime() < now + ms) { /* do nothing */ }
 }
 
-// var node_;
-// beforeAll(async () => {
-//     console.log("beforeAll");
-//     console.log('\n\n\n\n');
-
-//     // const setts = settings.getDefault(network.Network.mainnet);
-//     const setts = kth.settings.getDefault(kth.network.mainnet);
-//     setts.database.dbMaxSize = 2 * 1024 * 1024;    // 2MiB
-//     // console.log(`setts: ${JSON.stringify(setts, null, 2)}`);
-//     // console.log('\n\n\n\n');
-//     // node_ = new node.Node(setts, true);
-//     const node = new kth.node.Node(setts, true);
-//     node_ = node;
-
-//     const res = await node_.launch(primitives.StartModules.justChain);
-//     expect(res).toBe(0);
-//     await fillBlocks(node_.chain);
-// });
-
-
-// afterAll(() => {
-//     // sleepBusy(3000);
-//     node_.close();
-// });
-
 function verifyGenesisBlockHeader(header) {
     expect(header).not.toBeNull();
     expect(header).toBeTruthy();
-    expect(enc.Hash.bytesToStr(header.hash)).toEqual("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-    expect(enc.Hash.bytesToStr(header.merkle)).toEqual("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    expect(enc.Hash.bytesToStr(header.previousBlockHash)).toEqual("0000000000000000000000000000000000000000000000000000000000000000");
+    expect(kth.enc.Hash.bytesToStr(header.hash)).toEqual("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+    expect(kth.enc.Hash.bytesToStr(header.merkle)).toEqual("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+    expect(kth.enc.Hash.bytesToStr(header.previousBlockHash)).toEqual("0000000000000000000000000000000000000000000000000000000000000000");
     expect(header.version).toEqual(1);
     expect(header.bits).toEqual(486604799);
     expect(header.nonce).toEqual(2083236893);
@@ -328,7 +601,7 @@ function checkFirstNonCoinbaseTxFromHeight170Outputs(tx) {
 
 function checkFirstNonCoinbaseTxFromHeight170(tx, txHashHexStr) {
     expect(tx.version).toEqual(1);
-    expect(enc.Hash.bytesToStr(tx.hash)).toEqual(txHashHexStr);
+    expect(kth.enc.Hash.bytesToStr(tx.hash)).toEqual(txHashHexStr);
     expect(tx.locktime).toEqual(0);
     expect(tx.rawData(true).length).toEqual(275);
     expect(tx.rawData(false).length).toEqual(275);
@@ -355,9 +628,9 @@ function checkFirstNonCoinbaseTxFromHeight170(tx, txHashHexStr) {
 
 function VerifyBlock170Header(header) {
     expect(header).not.toBeNull();
-    expect(enc.Hash.bytesToStr(header.hash)).toEqual("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
-    expect(enc.Hash.bytesToStr(header.merkle)).toEqual("7dac2c5666815c17a3b36427de37bb9d2e2c5ccec3f8633eb91a4205cb4c10ff");
-    expect(enc.Hash.bytesToStr(header.previousBlockHash)).toEqual("000000002a22cfee1f2c846adbd12b3e183d4f97683f85dad08a79780a84bd55");
+    expect(kth.enc.Hash.bytesToStr(header.hash)).toEqual("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
+    expect(kth.enc.Hash.bytesToStr(header.merkle)).toEqual("7dac2c5666815c17a3b36427de37bb9d2e2c5ccec3f8633eb91a4205cb4c10ff");
+    expect(kth.enc.Hash.bytesToStr(header.previousBlockHash)).toEqual("000000002a22cfee1f2c846adbd12b3e183d4f97683f85dad08a79780a84bd55");
     expect(header.version).toEqual(1);
     expect(header.bits).toEqual(486604799);
     expect(header.nonce).toEqual(1889418792);
@@ -377,9 +650,9 @@ function VerifyBlock170Header(header) {
 
 // private static void verifyGenesisBlockHeader(IHeader header) {
 //     expect().not.toBeNull(header);
-//     expect("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").toEqual(enc.Hash.bytesToStr(header.Hash));
-//     expect("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b").toEqual(enc.Hash.bytesToStr(header.Merkle));
-//     expect("0000000000000000000000000000000000000000000000000000000000000000").toEqual(enc.Hash.bytesToStr(header.PreviousBlockHash));
+//     expect("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").toEqual(kth.enc.Hash.bytesToStr(header.Hash));
+//     expect("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b").toEqual(kth.enc.Hash.bytesToStr(header.Merkle));
+//     expect("0000000000000000000000000000000000000000000000000000000000000000").toEqual(kth.enc.Hash.bytesToStr(header.PreviousBlockHash));
 //     expect(1).toEqual(header.Version);
 //     expect(486604799).toEqual(header.Bits);
 //     expect(2083236893).toEqual(header.Nonce);
@@ -396,203 +669,3 @@ function VerifyBlock170Header(header) {
 //         }
 //     }
 // }
-
-test('dummy', () => {
-    expect(1).toEqual(1);
-});
-
-// test('retrieves the right chain height', async () => {
-//     const [_, h] = await node_.chain.getLastHeight();
-//     expect(h).toEqual(170);
-// });
-
-// test('getBlockHeaderByHeight', async () => {
-//     const ret = await node_.chain.getBlockHeaderByHeight(0);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     expect(ret[2]).toEqual(0);
-//     verifyGenesisBlockHeader(ret[1]);
-// });
-
-// test('getBlockHeaderByHash', async () => {
-//     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-//     const ret = await node_.chain.getBlockHeaderByHash(hash);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     verifyGenesisBlockHeader(ret[1]);
-// });
-
-// test('getBlockByHeight', async () => {
-//     const ret = await node_.chain.getBlockByHeight(0);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     verifyGenesisBlockHeader(ret[1].header);
-// });
-
-// test('getBlockByHash', async () => {
-//     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-//     const ret = await node_.chain.getBlockByHash(hash);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     verifyGenesisBlockHeader(ret[1].header);
-// });
-
-// test('getBlockHeight', async () => {
-//     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-//     const ret = await node_.chain.getBlockHeight(hash);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     expect(ret[1]).toEqual(0);
-// });
-
-// test('getTransactionGenesis', async () => {
-//     const txHashHexStr = "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b";
-//     const hash = enc.Hash.strToBytes(txHashHexStr);
-//     const ret = await node_.chain.getTransaction(hash, true);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     const tx = ret[1];
-//     expect(ret[2]).toEqual(0);         // index of the Tx inside the Block
-//     expect(ret[3]).toEqual(0);         // block height
-// });
-
-// test('getTransaction', async () => {
-//     const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
-//     const hash = enc.Hash.strToBytes(txHashHexStr);
-//     const ret = await node_.chain.getTransaction(hash, true);
-//     const tx = ret[1];
-//     expect(ret[0]).toEqual(err.errors.success);
-//     expect(ret[2]).toEqual(1);
-//     expect(ret[3]).toEqual(FIRST_NON_COINBASE_BLOCK_HEIGHT);
-//     checkFirstNonCoinbaseTxFromHeight170(tx, txHashHexStr);
-// });
-
-// test('GetTransactionPosition', async () => {
-//     const txHashHexStr = "f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16";
-//     const hash = enc.Hash.strToBytes(txHashHexStr);
-//     const ret = await node_.chain.getTransactionPosition(hash, true);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     expect(ret[1]).toEqual(1);
-//     expect(ret[2]).toEqual(FIRST_NON_COINBASE_BLOCK_HEIGHT);
-// });
-
-// test('getBlockByHash170', async () => {
-//     const hash = enc.Hash.strToBytes("00000000d1145790a8694403d4063f323d499e655c83426834d4ce2f8dd4a2ee");
-//     const ret = await node_.chain.getBlockByHash(hash);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     VerifyBlock170Header(ret[1].header);
-// });
-
-// test('organizeBlock', async () => {
-//     const ret = await node_.chain.getBlockByHeight(0);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     const block = ret[1];
-//     const retOrg = await node_.chain.organizeBlock(block);
-//     expect(retOrg).toEqual(err.errors.duplicateBlock);
-// });
-
-// test('OrganizeTransaction', async () => {
-//     const ret = await node_.chain.getBlockByHeight(0);
-//     expect(ret[0]).toEqual(err.errors.success);
-//     const block = ret[1];
-//     const tx = block.transactions[0];
-//     const retOrg = await node_.chain.organizeTransaction(tx);
-//     expect(retOrg).toEqual(err.errors.coinbaseTransaction);
-// });
-
-
-// test('node information', async () => {
-//     expect(node_.capi_version).toEqual("0.36.0");
-//     expect(node_.cppapi_version).toEqual("0.35.0");
-//     expect(node_.version).toEqual("1.21.0");
-//     expect(node_.microarchitecture).toEqual("ZLm9Pjh");
-//     expect(node_.march_names).toEqual("64 bits, CMOV, CX8, FPU, FXSR, MMX, SCE, SSE, SSE2, CX16, LAHF-SAHF, POPCNT, SSE3, SSE4.1, SSE4.2, SSSE3, AVX, AVX2, BMI1, BMI2, F16C, FMA, LZCNT ABM, MOVBE, XSAVE");
-//     expect(node_.currency_symbol).toEqual("BCH");
-//     expect(node_.currency).toEqual("Bitcoin Cash");
-//     // expect(node_.js_native_version).toEqual("0.54.0");
-//     // expect(node_.db_type).toEqual("full-indexed");
-// });
-
-
-// //TODO(fernando): implement
-// // test('getSpend', async () => {
-// //     const hash = enc.Hash.strToBytes("0437cd7f8525ceed2324359c2d0ba26006d92d856a9c20fa0241106ee5a597c9");
-// //     const outputPoint = new OutputPoint(hash, 0);
-// //     const ret = await node_.chain.GetSpend(outputPoint);
-
-// //     expect(ret.ErrorCode, ErrorCode.Success);
-// //     // expect().not.toBeNull(ret.Result);
-// //     expect(enc.Hash.bytesToStr(ret.Result.Hash)).toEqual("f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16");
-// //     expect(ret.Result.Index).toEqual(0);
-// // });
-
-
-// //TODO(fernando): implement
-// // test('GetMerkleBlockByHash', async () => {
-// //     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-// //     const ret = await node_.chain.GetMerkleBlockByHash(hash)) {
-// //         expect(ret[0]).toEqual(err.errors.success);
-// //         expect().not.toBeNull(ret[0]);
-// //         expect(0).toEqual(ret.Result.BlockHeight);
-// //         expect(1).toEqual(ret[0].TotalTransactionCount);
-// //         verifyGenesisBlockHeader(ret[0].Header);
-// //     }
-// // });
-
-
-// //TODO(fernando): implement
-// // test('GetMerkleBlockByHeight', async () => {
-// //     //https://blockchain.info/es/block-height/0
-// //     const ret = await node_.chain.GetMerkleBlockByHeight(0)) {
-// //         expect(ret[0]).toEqual(err.errors.success);
-// //         expect().not.toBeNull(ret[0]);
-// //         expect(0).toEqual(ret.Result.BlockHeight);
-// //         expect(1).toEqual(ret[0].TotalTransactionCount);
-// //         verifyGenesisBlockHeader(ret[0].Header);
-// //     }
-// // });
-
-// //TODO(fernando): implement
-// // test('GetBlockHeaderByHashTxSizes', async () => {
-// //     const hash = enc.Hash.strToBytes("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
-// //     const ret = await node_.chain.getBlockHeaderByHashTxSizes(hash);
-// //     console.log(ret);
-// //     expect(ret[0]).toEqual(err.errors.success);
-// //     verifyGenesisBlockHeader(ret.Result.Header.BlockData);
-// // });
-
-// //TODO(fernando): implement
-// // test('getBlockByHeightHashTimestamp', async () => {
-// //     const ret = await node_.chain.getBlockByHeightHashTimestamp(0);
-// //     expect(ret[0]).toEqual(err.errors.success);
-// //     expect("2009-01-03 18:15:05").toEqual(ret.Result.BlockTimestamp.ToString("yyyy-MM-dd HH:mm:ss"));
-// // }
-
-// //TODO(fernando): implement
-// // test('GetHistory', async () => {
-// //     const address = new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7")) {
-// //         const ret = await node_.chain.GetHistory(address,10,1))
-// //         {
-// //             foreach (const x in ret.Result) {
-
-// //             }
-// //             expect().toBeTruthy(ret.Result.length >= 0);
-// //         }
-// //     }
-// // }
-
-// //TODO(fernando): implement
-// // test('GetConfirmedTransactions', async () => {
-// //     const address = new PaymentAddress("bchtest:qp7d6x2weeca9fn6eakwvgd9ryq8g6h0tuyks75rt7"))
-// //     const ret = await node_.chain.GetConfirmedTransactions(address,10,1)) {
-// //         expect().toBeTruthy(ret.Result.length >= 0);
-// //     }
-// // }
-
-// //TODO(fernando): implement
-// // test('ValidateTransaction', async () => {
-// //     const block = await node_.chain.getBlockByHeight(0)) {
-// //         const ret = await node_.chain.ValidateTransaction((Transaction)block.Result.BlockData.GetNthTransaction(0));
-// //         expect().toBeTruthy(ret.ErrorCode == ErrorCode.CoinbaseTransaction);
-// //     }
-// // }
-
-// //TODO(fernando): implement
-// // public void IsStale', async () => {
-// //     const ret = node_.chain.IsStale;
-// //     expect().toBeTruthy(ret);
-// // }

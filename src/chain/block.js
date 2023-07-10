@@ -39,6 +39,38 @@ const fromNative = (native, destroy = false) => {
         destruct(native);
     }
     return obj;
+
+    // console.log(native);
+
+    // const headerNative = kth.chain_block_header(native);
+    // console.log(headerNative);
+    // const version = kth.chain_header_version(headerNative);
+    // console.log(version);
+    // // const prevHash = kth.chain_header_previous_block_hash(headerNative);
+    // // console.log(prevHash);
+    // // const merkle = kth.chain_header_merkle(headerNative);
+    // // console.log(merkle);
+    // // const timestamp = kth.chain_header_timestamp(headerNative);
+    // // console.log(timestamp);
+    // // const bits = kth.chain_header_bits(headerNative);
+    // // console.log(bits);
+    // // const nonce = kth.chain_header_nonce(headerNative);
+    // // console.log(nonce);
+
+
+    // // const h = header.fromNative(kth.chain_block_header(native));
+    // // console.log(h);
+    // // const txs = transactionList.fromNative(kth.chain_block_transactions(native));
+    // // console.log(txs);
+    // // const obj = new Block(
+    // //     header.fromNative(kth.chain_block_header(native)),
+    // //     transactionList.fromNative(kth.chain_block_transactions(native))
+    // // );
+    // if (destroy) {
+    //     destruct(native);
+    // }
+    // // return obj;
+    // return undefined;
 };
 
 const fromData = (version, data) => {
