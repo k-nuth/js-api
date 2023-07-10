@@ -8,6 +8,8 @@ const header = require('./header');
 const block = require('./block');
 const transaction = require('./transaction');
 const blockList = require('./blockList');
+const err = require('../errors');
+
 
 const async_chain = {
     // fetch_last_height: Promise.promisify(kth.chain_fetch_last_height),
@@ -103,6 +105,11 @@ const async_chain = {
     },
 };
 
+function objOrNull(ec, native, fromNative) {
+    const obj = ec == err.errors.success ? fromNative(native) : null;
+    return obj;
+}
+
 class Chain {
     constructor(native, nodeNative) {
         this.native = native;
@@ -123,27 +130,32 @@ class Chain {
 
     async getBlockHeaderByHeight(height) {
         const res = await async_chain.fetch_block_header_by_height(this.native, height);
-        return [res[0], header.fromNative(res[1]), res[2]];
+        const obj = objOrNull(res[0], res[1], header.fromNative);
+        return [res[0], obj, res[2]];
     }
 
     async getBlockHeaderByHash(hash) {
         const res = await async_chain.fetch_block_header_by_hash(this.native, hash);
-        return [res[0], header.fromNative(res[1]), res[2]];
+        const obj = objOrNull(res[0], res[1], header.fromNative);
+        return [res[0], obj, res[2]];
     }
 
     async getBlockByHeight(height) {
         const res = await async_chain.fetch_block_by_height(this.native, height);
-        return [res[0], block.fromNative(res[1]), res[2]];
+        const obj = objOrNull(res[0], res[1], block.fromNative);
+        return [res[0], obj, res[2]];
     }
 
     async getBlockByHash(hash) {
         const res = await async_chain.fetch_block_by_hash(this.native, hash);
-        return [res[0], block.fromNative(res[1]), res[2]];
+        const obj = objOrNull(res[0], res[1], block.fromNative);
+        return [res[0], obj, res[2]];
     }
 
     async getTransaction(hash, requireConfirmed) {
         const res = await async_chain.fetch_transaction(this.native, hash, requireConfirmed);
-        return [res[0], transaction.fromNative(res[1]), res[2], res[3]];
+        const obj = objOrNull(res[0], res[1], transaction.fromNative);
+        return [res[0], obj, res[2], res[3]];
     }
 
     async getTransactionPosition(hash, requireConfirmed) {
