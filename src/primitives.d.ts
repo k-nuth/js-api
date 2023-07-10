@@ -7,3 +7,9 @@ export enum StartModules {
   justChain = 1,
   justP2P = 2
 }
+
+export enum DbMode {
+  pruned = 0,
+  normal = 1,
+  fullIndexed = 2
+}

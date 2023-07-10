@@ -72,9 +72,7 @@ export interface BlockchainSettings {
 
 export interface DatabaseSettings {
     directory: string;
-    flushWrites: boolean;
-    fileGrowthRate: number;
-    indexStartHeight: number;
+    dbMode: DbMode;
     reorgPoolLimit: number;
     dbMaxSize: number;
     safeMode: boolean;

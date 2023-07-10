@@ -8,4 +8,11 @@ const StartModules = Object.freeze({
     justP2P: 2
 });
 
+const DbMode = Object.freeze({
+    pruned: 0,
+    normal: 1,
+    fullIndexed: 2
+});
+
 exports.StartModules = StartModules;
+exports.DbMode = DbMode;

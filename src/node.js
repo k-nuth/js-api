@@ -49,6 +49,10 @@ class Node {
         return kth.node_cppapi_version();
     }
 
+    // get js_native_version() {
+    //     return kth.node_js_native_version();   //TODO: implement on native side
+    // }
+
     get version() {
         return process.env.npm_package_version;
     }
@@ -69,9 +73,9 @@ class Node {
         return kth.node_currency();
     }
 
-    get db_type() {
-        return kth.node_db_type();
-    }
+    // get db_type() {
+    //     return kth.node_db_type();
+    // }
 }
 
 exports.Node = Node;
