@@ -5,13 +5,16 @@
 /* eslint-disable */
 
 const kth = require("@knuth/bch")
+// const kth = require('../src/kth');
 
 let running_ = false;
 
 async function main() {
     process.on('SIGINT', shutdown);
     const config = kth.settings.getDefault(kth.network.mainnet);
-    const node = new kth.node.Node(config, false);
+    console.log(`Default config: ${JSON.stringify(config)}`);
+    const node = new kth.node.Node(config, true);
+    console.log("Knuth node has been created.");
     await node.launch(kth.startModules.all);
     console.log("Knuth node has been launched.");
     running_ = true;

@@ -25,6 +25,7 @@ module.exports = {
     errors: err.errors,
 
     startModules: primitives.StartModules,
+    dbMode: primitives.DbMode,
 
     //Chain
     block,

@@ -1,6 +1,7 @@
 const settings = require('../../src/config/settings');
 const network = require('../../src/config/network');
 const enc = require('../../src/encoding');
+const primitives = require('../../src/primitives');
 
 test('read default mainnet settings', () => {
     const setts = settings.getDefault(network.Network.mainnet);
@@ -47,11 +48,10 @@ test('read default mainnet settings', () => {
     expect(setts.chain.asertHalfLife).toBe(2 * 24 * 60 * 60); //two days
     // ------------------------------------------------------------------------------------
     expect(setts.database.directory).toBe('blockchain');
-    expect(setts.database.flushWrites).toBe(false);
-    expect(setts.database.fileGrowthRate).toBe(50);
-    expect(setts.database.indexStartHeight).toBe(0);
+    expect(setts.database.dbMode).toBe(primitives.DbMode.normal);
     expect(setts.database.reorgPoolLimit).toBe(100);
-    expect(setts.database.dbMaxSize).toBe(600 * 1024 * 1024 * 1024);
+    expect(setts.database.dbMaxSize).toBe(200 * 1024 * 1024 * 1024);
+    // expect(setts.database.dbMaxSize).toBe(600 * 1024 * 1024 * 1024);
     expect(setts.database.safeMode).toBe(true);
     expect(setts.database.cacheCapacity).toBe(0);
     // ------------------------------------------------------------------------------------
@@ -154,9 +154,7 @@ test('read default testnet4 settings', () => {
     expect(setts.chain.asertHalfLife).toBe(60 * 60); // one hour
     // ------------------------------------------------------------------------------------
     expect(setts.database.directory).toBe('blockchain');
-    expect(setts.database.flushWrites).toBe(false);
-    expect(setts.database.fileGrowthRate).toBe(50);
-    expect(setts.database.indexStartHeight).toBe(0);
+    expect(setts.database.dbMode).toBe(primitives.DbMode.normal);
     expect(setts.database.reorgPoolLimit).toBe(100);
     expect(setts.database.dbMaxSize).toBe(20 * 1024 * 1024 * 1024); // 20 GiB
     expect(setts.database.safeMode).toBe(true);
@@ -261,9 +259,7 @@ test('read default chipnet settings', () => {
     expect(setts.chain.asertHalfLife).toBe(60 * 60); // one hour
     // ------------------------------------------------------------------------------------
     expect(setts.database.directory).toBe('blockchain');
-    expect(setts.database.flushWrites).toBe(false);
-    expect(setts.database.fileGrowthRate).toBe(50);
-    expect(setts.database.indexStartHeight).toBe(0);
+    expect(setts.database.dbMode).toBe(primitives.DbMode.normal);
     expect(setts.database.reorgPoolLimit).toBe(100);
     expect(setts.database.dbMaxSize).toBe(20 * 1024 * 1024 * 1024); // 20 GiB
     expect(setts.database.safeMode).toBe(true);

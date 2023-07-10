@@ -6,6 +6,7 @@ import * as node from './node';
 
 import * as enc from './encoding';
 import { StartModules as startModules } from './primitives';
+import { DbMode as dbMode } from './primitives';
 
 import * as block from './chain/block';
 import * as header from './chain/header';
@@ -22,6 +23,7 @@ export {
     node,
     enc,
     startModules,
+    dbMode,
 
     //Chain
     block,
