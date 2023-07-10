@@ -99,6 +99,7 @@ jobs:
 
       - run: python --version
       - run: python3 --version
+      - run: wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
       # - run: npm install --loglevel verbose
       - run: npm install
       - run: git status
