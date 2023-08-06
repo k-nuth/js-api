@@ -45,6 +45,38 @@ const onBlockArrivedGenerator = (n) => {
     }
 }
 
+const onTransactionArrivedGenerator = (n) => {
+    return (e, tx) => {
+        console.log(`onTransactionArrivedGenerator - `, n, e, tx);
+
+        if (e !== kth.errors.success) {
+            console.log(`Error: ${e}`);
+            return false;
+        }
+
+        if ( ! running_) {
+            return false;
+        }
+
+        if (tx !== null) {
+            console.log("Transaction received: ", tx);
+        }
+
+        if (n >= max.length) {
+            console.log("n >= max.length");
+            return false;
+        }
+
+        count[n] += 1;
+        if (count[n] >= max[n]) {
+            console.log("count[n] >= max[n]");
+            return false;
+        }
+
+        return true;
+    }
+}
+
 async function main() {
     process.on('SIGINT', shutdown);
     const config = kth.settings.getDefault(kth.network.chipnet);
@@ -63,6 +95,17 @@ async function main() {
     node.chain.subscribeBlockchain(onBlockArrivedGenerator(7));
     node.chain.subscribeBlockchain(onBlockArrivedGenerator(8));
     node.chain.subscribeBlockchain(onBlockArrivedGenerator(9));
+
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(0));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(1));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(2));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(3));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(4));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(5));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(6));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(7));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(8));
+    node.chain.subscribeTransaction(onTransactionArrivedGenerator(9));
 
     while (running_) {
         await sleep(1000);

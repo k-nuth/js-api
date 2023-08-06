@@ -39,8 +39,26 @@ async function main() {
         return true;
     });
 
-    while (running_) {
+    node.chain.subscribeTransaction((e, tx) => {
+        if (e !== kth.errors.success) {
+            console.log(`Error: ${e}`);
+            return false;
+        }
 
+        if ( ! running_) {
+            return false;
+        }
+
+
+        if (tx !== null) {
+            console.log("Received Transaction: ", tx);
+        }
+
+        return true;
+    });
+
+
+    while (running_) {
         await sleep(1000);
     }
 
