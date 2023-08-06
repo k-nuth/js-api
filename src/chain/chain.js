@@ -103,6 +103,10 @@ const async_chain = {
     subscribe_blockchain: (...args) => {
         kth.chain_subscribe_blockchain(...args);
     },
+    subscribe_transaction: (...args) => {
+        kth.chain_subscribe_transaction(...args);
+    },
+
 };
 
 function objOrNull(ec, native, fromNative) {
@@ -116,6 +120,8 @@ class Chain {
         this.nodeNative = nodeNative;
         this.blockchainSubscribers = [];
         this.blockAlreadySubscribed = false;
+        this.transactionSubscribers = [];
+        this.transactionAlreadySubscribed = false;
     }
 
     async getLastHeight() {
@@ -196,6 +202,27 @@ class Chain {
             for (const subscriber of [...this.blockchainSubscribers]) {
                 if ( ! subscriber(error, height, incomingBlocks, outgoingBlocks)) {
                     this.blockchainSubscribers = this.blockchainSubscribers.filter(s => s !== subscriber);
+                }
+            }
+            return true;
+        });
+    }
+
+    subscribeTransaction(callback) {
+        this.transactionSubscribers.push(callback);
+        if (this.transactionAlreadySubscribed) {
+            return;
+        }
+        this.transactionAlreadySubscribed = true;
+
+        async_chain.subscribe_transaction(this.nodeNative, this.native, (error, tx) => {
+            if (tx !== null) {
+                tx = tx.fromNative(tx);
+            }
+
+            for (const subscriber of [...this.transactionSubscribers]) {
+                if ( ! subscriber(error, tx)) {
+                    this.transactionSubscribers = this.transactionSubscribers.filter(s => s !== subscriber);
                 }
             }
             return true;
