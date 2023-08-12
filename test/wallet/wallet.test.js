@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2023 Knuth Project developers.
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 const { Wallet } = require('../../src/wallet/wallet');
 const { PaymentAddress } = require('../../src/wallet/paymentAddress');
 
@@ -56,6 +60,21 @@ describe('Wallet', () => {
             'bitcoincash:qrwelh5dw56rjnr3nnttfc45j0p0yv2a3vtuwu9nlt',
             'bitcoincash:qpawyf7fp6lhvhld5gtz74smm969fx2j2546uj60l0'])
     });
+
+
+    describe('generateAddresses generator', () => {
+        it('should lazily generate addresses', () => {
+            const addresses = wallet.generateAddresses();
+            expect(addresses.take(5).map(a => a.encoded()).toArray()).toStrictEqual([
+                'bitcoincash:qr9sawzzmstkluq9nqefsu7eqya4zk2w7udune2pmf',
+                'bitcoincash:qpvmwrhxcdyyq64ar6kz46rejp0r2tjcwg8d462hum',
+                'bitcoincash:qqftgwpz0wm45z3sumncfrzm0s3n7x5rcqq9350gd6',
+                'bitcoincash:qrwelh5dw56rjnr3nnttfc45j0p0yv2a3vtuwu9nlt',
+                'bitcoincash:qpawyf7fp6lhvhld5gtz74smm969fx2j2546uj60l0'
+            ]);
+        });
+    });
+
 
     // test('deriveAccount should return a new Wallet instance with new derivation path', () => {
     //     const newDerivationPath = "m/44'/0'/0'/0";

@@ -5,6 +5,7 @@
 const kth = require('@knuth/bch-native');
 
 const paymentAddress = require('./paymentAddress');
+const { LazySequence } = require('../utils/lazySequence');
 
 class Wallet {
     constructor(mnemonic, derivationPath, network = 'MAINNET') {
@@ -66,15 +67,6 @@ class Wallet {
         const secret = kth.wallet_hd_private_secret(key);
         const point = kth.wallet_secret_to_public(secret);
         const ecp = kth.wallet_ec_public_construct_from_point(point, true);
-        const pa = kth.wallet_ec_public_to_payment_address(ecp, this.network === 'MAINNET' ? 0x00 : 0x05);
-        return kth.wallet_payment_address_encoded_cashaddr(pa, false);
-    }
-
-    getAddress(index) {
-        const key = kth.wallet_hd_private_derive_private(this.lastDerived, index);
-        const secret = kth.wallet_hd_private_secret(key);
-        const point = kth.wallet_secret_to_public(secret);
-        const ecp = kth.wallet_ec_public_construct_from_point(point, true);
         const nativePA = kth.wallet_ec_public_to_payment_address(ecp, this.network === 'MAINNET' ? 0x00 : 0x05);
         return paymentAddress.fromNative(nativePA);
     }
@@ -85,6 +77,23 @@ class Wallet {
             addresses.push(this.getAddress(i));
         }
         return addresses;
+    }
+
+    // *generateAddresses() {
+    //     let index = 0;
+    //     while (true) {
+    //         yield this.getAddress(index++);
+    //     }
+    // }
+
+    generateAddresses() {
+        const self = this;
+        return new LazySequence(function*() {
+            let index = 0;
+            while (true) {
+                yield self.getAddress(index++);
+            }
+        });
     }
 
     deriveAccount(derivationPath) {
