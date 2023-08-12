@@ -2,7 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-import { Result } from '../result';
+import { LazySequence } from '../utils/lazySequence';
+import { PaymentAddress } from './paymentAddress';
 
 export declare class Wallet {
     constructor(mnemonic: string[], derivationPath: string, network?: string);
@@ -13,6 +14,7 @@ export declare class Wallet {
 
     getAddress(index: number): PaymentAddress;
     getAddresses(count?: number): PaymentAddress[];
+    generateAddresses(): LazySequence<PaymentAddress>;
 
     deriveAccount(derivationPath: string): Wallet;
 
@@ -22,6 +24,5 @@ export declare class Wallet {
     //TODO: toPublic(): Wallet;
 }
 
-// Si la clase PaymentAddress está en un archivo separado, deberías importarla así:
-import { PaymentAddress } from './paymentAddress';
+
 
