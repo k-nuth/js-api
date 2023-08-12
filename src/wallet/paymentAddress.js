@@ -29,8 +29,11 @@ class PaymentAddress {
     }
 
     encoded() {
-        const res = memoizedEncoded(this, false);
-        return res;
+        if (this.tokenAware) {
+            const res = memoizedEncoded(this, false);
+            return res;
+        }
+        return this.addressStr;
     }
 
     // This is an alias for encoded()
