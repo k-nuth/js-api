@@ -42,7 +42,7 @@ class PaymentAddress {
         return res;
     }
 
-    encodedTokenAware() {
+    encodedCashTokens() {
         const res = memoizedEncoded(this, true);
         return res;
     }
@@ -61,7 +61,7 @@ const fromNative = (native, destroy = false) => {
     return obj;
 };
 
-const fromNativeTokenAware = (native, destroy = false) => {
+const fromNativeCashTokens = (native, destroy = false) => {
     const obj = new PaymentAddress(kth.wallet_payment_address_encoded_cashaddr(native, true), true, false);
     if (destroy) {
         destruct(native);
@@ -77,7 +77,7 @@ const fromNativeLegacy = (native, destroy = false) => {
     return obj;
 };
 
-const fromData = (addressStr) => {
+const fromString = (addressStr) => {
     const native = kth.wallet_payment_address_construct_from_string(addressStr);
     const valid = kth.wallet_payment_address_is_valid(native);
     if (!valid) {
@@ -89,19 +89,19 @@ const fromData = (addressStr) => {
     return new result.Result(obj, true);
 };
 
-const fromDataTokenAware = (addressStr) => {
+const fromStringCashTokens = (addressStr) => {
     const native = kth.wallet_payment_address_construct_from_string(addressStr);
     const valid = kth.wallet_payment_address_is_valid(native);
     if (!valid) {
         destruct(native);
         return new result.Result(undefined, false);
     }
-    const obj = fromNativeTokenAware(native);
+    const obj = fromNativeCashTokens(native);
     destruct(native);
     return new result.Result(obj, true);
 };
 
-const fromDataLegacy = (addressStr) => {
+const fromStringLegacy = (addressStr) => {
     const native = kth.wallet_payment_address_construct_from_string(addressStr);
     const valid = kth.wallet_payment_address_is_valid(native);
     if (!valid) {
@@ -158,12 +158,12 @@ const destruct = (native) => {
 };
 
 exports.fromNative = fromNative;
-exports.fromNativeTokenAware = fromNativeTokenAware;
+exports.fromNativeCashTokens = fromNativeCashTokens;
 exports.fromNativeLegacy = fromNativeLegacy;
 
-exports.fromData = fromData;
-exports.fromDataTokenAware = fromDataTokenAware;
-exports.fromDataLegacy = fromDataLegacy;
+exports.fromString = fromString;
+exports.fromStringCashTokens = fromStringCashTokens;
+exports.fromStringLegacy = fromStringLegacy;
 
 exports.isValid = isValid;
 exports.destruct = destruct;
