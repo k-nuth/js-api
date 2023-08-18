@@ -15,8 +15,12 @@ const outputPoint = require('./chain/outputPoint');
 const script = require('./chain/script');
 const transaction = require('./chain/transaction');
 
+const paymentAddress = require('./wallet/paymentAddress');
+const wallet = require('./wallet/wallet');
+
 const settings = require('./config/settings');
 const sett_network = require('./config/network');
+
 const err = require('../src/errors');
 
 module.exports = {
@@ -35,6 +39,10 @@ module.exports = {
     outputPoint,
     script,
     transaction,
+
+    //Wallet
+    paymentAddress,
+    wallet,
 
     //Config
     settings,
