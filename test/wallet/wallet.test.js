@@ -39,7 +39,7 @@ describe('Wallet', () => {
     test('extendedPublicKey should return expected extended public key', () => {
         const extPublicKey = wallet.extendedPublicKey;
         expect(typeof extPublicKey).toBe('string');
-        expect(extPublicKey).toBe('xpuWo6KFYMvDoyMYeU3x2z326V49Bw9kppazNf4cbhQNAL7QWMTcCmr7cjiLP9yLbS1E1JHt2MoTHM3PofwJhPhmmYSNgCjiAQUibkHd4LxfG1P');
+        expect(extPublicKey).toBe('xpub6FMojX6j83AkovffdfxdGcTXhmZ5Wvaed5L39eNyzQ5oK1CGiP2Gbaht8yTEBM2rfGMpNnkkXiQkhUKJnnrc31yLgvmimYWEhXdGXwy16eW');
     });
 
     test('getAddress should return PaymentAddress instance for given index', () => {
