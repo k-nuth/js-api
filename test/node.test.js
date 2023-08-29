@@ -122,7 +122,7 @@ describe('full indexed node tests', () => {
 
 
     it('node information', async () => {
-        expect(node_.capi_version).toEqual("0.39.0");
+        expect(node_.capi_version).toEqual("0.41.0");
         expect(node_.cppapi_version).toEqual("0.38.0");
         // expect(node_.version).toEqual("2.2.0");
         expect(node_.microarchitecture).toEqual("ZLm9Pjh");

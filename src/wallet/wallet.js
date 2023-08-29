@@ -28,8 +28,8 @@ class Wallet {
 
         this.seed = kth.wallet_mnemonics_to_seed(wl);
 
-        const version = this.network === 'MAINNET' ? 326702167824577054 : 303293221666392015;
-        this.master = kth.wallet_hd_private_construct_with_seed(this.seed, version);
+        const version = this.network === 'MAINNET' ? 326702167824577054n : 303293221666392015n;
+        this.master = kth.wallet_hd_private_construct_seed(this.seed, version);
 
         const paths = this.derivationPath.split('/');
         this.lastDerived = paths.reduce((prevKey, pathChunk) => {
