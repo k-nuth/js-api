@@ -16,7 +16,7 @@ describe('Wallet', () => {
 
     let wallet;
 
-    beforeEach(() => {
+    beforeAll(() => {
         wallet = new Wallet(TEST_MNEMONIC, TEST_DERIVATION_PATH, TEST_NETWORK);
     });
 

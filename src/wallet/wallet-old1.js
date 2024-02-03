@@ -52,8 +52,6 @@ class Wallet {
                 return kth.wallet_hd_private_derive_private(prevKey, index);
             }
         }, this.master);
-
-        this.publicKey = kth.wallet_hd_private_to_public(this.lastDerived);
     }
 
     get rootKey() {
@@ -69,29 +67,35 @@ class Wallet {
     }
 
     resetPerformance() {
-        this.time_wallet_hd_public_derive_public = 0;
-        this.time_wallet_hd_public_point = 0;
+        this.time_wallet_hd_private_derive_private = 0;
+        this.time_wallet_hd_private_secret = 0;
+        this.time_wallet_secret_to_public = 0;
         this.time_wallet_ec_public_construct_from_point = 0;
         this.time_wallet_ec_public_to_payment_address = 0;
         this.time_paymentAddress_fromNative = 0;
     }
 
     getAddress(index) {
-
         let start = process.hrtime();
-        const key = kth.wallet_hd_public_derive_public(this.publicKey, index);
+        const key = kth.wallet_hd_private_derive_private(this.lastDerived, index);
         let end = process.hrtime(start);
-        this.time_wallet_hd_public_derive_public += end[1];
+        this.time_wallet_hd_private_derive_private += end[1];
 
         start = process.hrtime();
-        const point = kth.wallet_hd_public_point(key);
+        const secret = kth.wallet_hd_private_secret(key);
         end = process.hrtime(start);
-        this.time_wallet_hd_public_point += end[1];
+        this.time_wallet_hd_private_secret += end[1];
+
+        start = process.hrtime();
+        const point = kth.wallet_secret_to_public(secret);
+        end = process.hrtime(start);
+        this.time_wallet_secret_to_public += end[1];
 
         start = process.hrtime();
         const ecp = kth.wallet_ec_public_construct_from_point(point, true);
         end = process.hrtime(start);
         this.time_wallet_ec_public_construct_from_point += end[1];
+
 
         start = process.hrtime();
         const nativePA = kth.wallet_ec_public_to_payment_address(ecp, this.network === 'MAINNET' ? 0x00 : 0x05);
@@ -107,14 +111,16 @@ class Wallet {
     }
 
     printPerformance() {
-        console.log(`wallet_hd_public_derive_public:        ${this.time_wallet_hd_public_derive_public/1000}µs`);
-        console.log(`wallet_hd_public_point:                ${this.time_wallet_hd_public_point/1000}µs`);
+        console.log(`wallet_hd_private_derive_private:      ${this.time_wallet_hd_private_derive_private/1000}µs`);
+        console.log(`wallet_hd_private_secret:              ${this.time_wallet_hd_private_secret/1000}µs`);
+        console.log(`wallet_secret_to_public:               ${this.time_wallet_secret_to_public/1000}µs`);
         console.log(`wallet_ec_public_construct_from_point: ${this.time_wallet_ec_public_construct_from_point/1000}µs`);
         console.log(`wallet_ec_public_to_payment_address:   ${this.time_wallet_ec_public_to_payment_address/1000}µs`);
         console.log(`paymentAddress_fromNative:             ${this.time_paymentAddress_fromNative/1000}µs`);
 
-        const total = this.time_wallet_hd_public_derive_public +
-            this.time_wallet_hd_public_point +
+        const total = this.time_wallet_hd_private_derive_private +
+            this.time_wallet_hd_private_secret +
+            this.time_wallet_secret_to_public +
             this.time_wallet_ec_public_construct_from_point +
             this.time_wallet_ec_public_to_payment_address +
             this.time_paymentAddress_fromNative;
