@@ -63,9 +63,10 @@ export interface BlockchainSettings {
     bchEuler: boolean;
     bchGauss: boolean;
     bchDescartes: boolean;
+    bchLobachevski: boolean;
 
-    lobachevskiActivationTime: number;
     galoisActivationTime: number;
+    leibnizActivationTime: number;
 
     asertHalfLife: number;
 }

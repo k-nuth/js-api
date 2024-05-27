@@ -13,7 +13,7 @@ test('read default mainnet settings', () => {
     expect(settings.notifyLimitHours).toBe(24);
     expect(settings.reorganizationLimit).toBe(256);
 
-    expect(settings.checkpoints.length).toBe(76);
+    expect(settings.checkpoints.length).toBe(79);
     expect(settings.checkpoints[0].height).toBe(0);
     expect(enc.Hash.bytesToStr(settings.checkpoints[0].hash)).toBe(
         '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
@@ -42,9 +42,10 @@ test('read default mainnet settings', () => {
     expect(settings.bchEuler).toBe(true);
     expect(settings.bchGauss).toBe(true);
     expect(settings.bchDescartes).toBe(true);
+    expect(settings.bchLobachevski).toBe(true);
 
-    expect(settings.lobachevskiActivationTime).toBe(1715774400);
     expect(settings.galoisActivationTime).toBe(1747310400);
+    expect(settings.leibnizActivationTime).toBe(1778846400);
 
     expect(settings.asertHalfLife).toBe(2 * 24 * 60 * 60); //two days
 });
@@ -89,9 +90,10 @@ test('read default testnet4 settings', () => {
     expect(settings.bchEuler).toBe(true);
     expect(settings.bchGauss).toBe(true);
     expect(settings.bchDescartes).toBe(true);
+    expect(settings.bchLobachevski).toBe(true);
 
-    expect(settings.lobachevskiActivationTime).toBe(1715774400);
     expect(settings.galoisActivationTime).toBe(1747310400);
+    expect(settings.leibnizActivationTime).toBe(1778846400);
 
     expect(settings.asertHalfLife).toBe(60 * 60); //one hour
 });
@@ -107,7 +109,7 @@ test('read default chipnet settings', () => {
     expect(settings.notifyLimitHours).toBe(24);
     expect(settings.reorganizationLimit).toBe(256);
 
-    expect(settings.checkpoints.length).toBe(12);
+    expect(settings.checkpoints.length).toBe(14);
     expect(settings.checkpoints[0].height).toBe(0);
     expect(enc.Hash.bytesToStr(settings.checkpoints[0].hash)).toBe(
         '000000001dd410c49a788668ce26751718cc797474d3152a5fc073dd44fd9f7b'
@@ -136,9 +138,10 @@ test('read default chipnet settings', () => {
     expect(settings.bchEuler).toBe(true);
     expect(settings.bchGauss).toBe(true);
     expect(settings.bchDescartes).toBe(true);
+    expect(settings.bchLobachevski).toBe(true);
 
-    expect(settings.lobachevskiActivationTime).toBe(1715774400);
     expect(settings.galoisActivationTime).toBe(1747310400);
+    expect(settings.leibnizActivationTime).toBe(1778846400);
 
     expect(settings.asertHalfLife).toBe(60 * 60); //one hour
 });

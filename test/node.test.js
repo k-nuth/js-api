@@ -122,8 +122,8 @@ describe('full indexed node tests', () => {
 
 
     it('node information', async () => {
-        expect(node_.capi_version).toEqual("0.41.0");
-        expect(node_.cppapi_version).toEqual("0.38.0");
+        expect(node_.capi_version).toEqual("0.47.0");
+        expect(node_.cppapi_version).toEqual("0.44.0");
         // expect(node_.version).toEqual("2.2.0");
         expect(node_.microarchitecture).toEqual("ZLm9Pjh");
         expect(node_.march_names).toEqual("64 bits, CMOV, CX8, FPU, FXSR, MMX, SCE, SSE, SSE2, CX16, LAHF-SAHF, POPCNT, SSE3, SSE4.1, SSE4.2, SSSE3, AVX, AVX2, BMI1, BMI2, F16C, FMA, LZCNT ABM, MOVBE, XSAVE");
