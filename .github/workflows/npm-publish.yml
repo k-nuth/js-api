@@ -11,21 +11,21 @@ on: [push, pull_request]
 #     types: [created]
 
 jobs:
-  execute-linter:
-    name: Execute ESLint
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - name: Install modules
-      run: npm install
-    # - name: Run ESLint
-    #   run: npm run lint:github-action
+  # execute-linter:
+  #   name: Execute ESLint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 16
+  #   - name: Install modules
+  #     run: npm install
+  #   # - name: Run ESLint
+  #   #   run: npm run lint:github-action
 
   generate-matrix:
-    needs: execute-linter
+    # needs: execute-linter
     name: Generate Job Matrix
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
@@ -36,35 +36,9 @@ jobs:
         id: set-matrix
         env:
           MATRIX: '{"config": [
-                          {"name": "macOS NodeJS 18","nodejs_version": "18","os": "macos-12","os_kind": "macos","test": "0"}
+                          {"name": "macOS 14 (ARM) - NodeJS 20","nodejs_version": "20","os": "macos-14-arm64","os_kind": "macos","test": "0"}
                           ]}'
 
-          # MATRIX: '{"config": [
-          #                 {"name": "macOS NodeJS 18","nodejs_version": "18","os": "macos-12","os_kind": "macos","test": "0"},
-          #                 {"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
-          #                 {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-12","os_kind": "macos","test": "0"},
-          #                 ]}'
-
-                          # {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-12","os_kind": "macos","test": "0"},
-
-          # MATRIX: '{"config": [{"name": "Linux (GCC11) NodeJS 16","nodejs_version": "16","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
-          #                 {"name": "Linux (GCC11) NodeJS 14","nodejs_version": "14","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
-          #                 {"name": "Linux (GCC11) NodeJS 12","nodejs_version": "12","os": "ubuntu-16.04","os_kind": "linux","test": "1"},
-          #                 {"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-12","os_kind": "macos","test": "0"},
-          #                 {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-12","os_kind": "macos","test": "0"},
-          #                 {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-12","os_kind": "macos","test": "0"},
-          #                 ]}'
-
-          # MATRIX: '{"config": [{"name": "Linux NodeJS 16","nodejs_version": "16","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
-          #                 {"name": "Linux NodeJS 14","nodejs_version": "14","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
-          #                 {"name": "Linux NodeJS 12","nodejs_version": "12","os": "ubuntu-20.04","os_kind": "linux","test": "1"},
-          #                 {"name": "macOS NodeJS 16","nodejs_version": "16","os": "macos-11","os_kind": "macos","test": "0"},
-          #                 {"name": "macOS NodeJS 14","nodejs_version": "14","os": "macos-11","os_kind": "macos","test": "0"},
-          #                 {"name": "macOS NodeJS 12","nodejs_version": "12","os": "macos-11","os_kind": "macos","test": "0"},
-          #                 {"name": "Windows NodeJS 16","nodejs_version": "16","os": "windows-2019","os_kind": "windows","test": "1"},
-          #                 {"name": "Windows NodeJS 14","nodejs_version": "14","os": "windows-2019","os_kind": "windows","test": "1"},
-          #                 {"name": "Windows NodeJS 12","nodejs_version": "12","os": "windows-2019","os_kind": "windows","test": "1"},
-          #                 ]}'
         run: |
           echo "${MATRIX}"
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
@@ -83,7 +57,7 @@ jobs:
           node-version: ${{ matrix.config.nodejs_version }}
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.11"
 
       # - name: Settting EnvVars (Unix)
       #   if: ${{ matrix.config.os_kind != 'windows' }}
@@ -105,6 +79,7 @@ jobs:
       - run: python3 --version
       # - run: npm install --loglevel verbose
       - run: npm install
+      - run: npm run lint:github-action
       - run: git status
       - run: git diff
       - run: npm ci
