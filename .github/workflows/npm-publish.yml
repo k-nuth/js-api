@@ -36,7 +36,7 @@ jobs:
         id: set-matrix
         env:
           MATRIX: '{"config": [
-                          {"name": "macOS 14 (ARM) - NodeJS 20","nodejs_version": "20","os": "macos-14","os_kind": "macos","test": "0"}
+                          {"name": "macOS 14 (ARM) - NodeJS 20","nodejs_version": "20","os": "macos-14","os_kind": "macos", "os_version": "14.0","test": "0"}
                           ]}'
 
         run: |
@@ -58,6 +58,12 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+
+      - name: Settting EnvVars (macOS)
+        if: ${{ matrix.config.os_kind == 'macos' }}
+        shell: bash
+        run: |
+          echo "MACOSX_DEPLOYMENT_TARGET=${{ matrix.config.os_version }}" >> $GITHUB_ENV
 
       # - name: Settting EnvVars (Unix)
       #   if: ${{ matrix.config.os_kind != 'windows' }}
