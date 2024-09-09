@@ -36,7 +36,7 @@ jobs:
         id: set-matrix
         env:
           MATRIX: '{"config": [
-                          {"name": "macOS 14 (ARM) - NodeJS 20","nodejs_version": "20","os": "macos-14-arm64","os_kind": "macos","test": "0"}
+                          {"name": "macOS 14 (ARM) - NodeJS 20","nodejs_version": "20","os": "macos-14","os_kind": "macos","test": "0"}
                           ]}'
 
         run: |
