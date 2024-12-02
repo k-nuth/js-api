@@ -27,7 +27,7 @@ jobs:
   generate-matrix:
     # needs: execute-linter
     name: Generate Job Matrix
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -83,6 +83,7 @@ jobs:
 
       - run: python --version
       - run: python3 --version
+      - run: clang --version
       # - run: npm install --loglevel verbose
       - run: npm install
       # - run: npm run lint:github-action
